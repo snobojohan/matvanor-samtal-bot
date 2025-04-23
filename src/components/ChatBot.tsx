@@ -1,5 +1,6 @@
+
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageSquare, Send } from 'lucide-react';
+import { QuestionMark, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
@@ -133,7 +134,7 @@ const ChatBot = () => {
                 }`}
               >
                 {message.type === 'bot' && (
-                  <MessageSquare className="inline-block mr-2 h-4 w-4" />
+                  <QuestionMark className="inline-block mr-2 h-4 w-4" />
                 )}
                 {message.content}
               </div>
