@@ -36,6 +36,7 @@ export type Database = {
           created_at: string | null
           id: string
           questionid: string
+          session_id: string
           timestamp: string
         }
         Insert: {
@@ -43,6 +44,7 @@ export type Database = {
           created_at?: string | null
           id?: string
           questionid: string
+          session_id?: string
           timestamp: string
         }
         Update: {
@@ -50,6 +52,7 @@ export type Database = {
           created_at?: string | null
           id?: string
           questionid?: string
+          session_id?: string
           timestamp?: string
         }
         Relationships: []

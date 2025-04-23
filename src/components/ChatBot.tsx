@@ -13,6 +13,7 @@ const ChatBot = () => {
   const [currentQuestion, setCurrentQuestion] = useState('welcome');
   const [userInput, setUserInput] = useState('');
   const [chatHistory, setChatHistory] = useState<Array<{ type: 'bot' | 'user', content: string }>>([]);
+  const [sessionId] = useState(() => crypto.randomUUID());
   const chatEndRef = useRef<HTMLDivElement>(null);
   const { addResponse, responses } = useSurvey();
 
@@ -40,7 +41,8 @@ const ChatBot = () => {
         .insert({
           questionid: response.questionId,
           answer: response.answer,
-          timestamp: response.timestamp
+          timestamp: response.timestamp,
+          session_id: sessionId
         });
       
       if (error) {
