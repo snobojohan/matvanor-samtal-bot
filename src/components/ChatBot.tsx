@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -142,7 +143,7 @@ const ChatBot = () => {
               <div
                 className={`rounded-lg p-3 max-w-[80%] ${
                   message.type === 'user'
-                    ? 'bg-chatblue text-white'
+                    ? 'bg-[#2D9CDB] text-white'
                     : 'bg-[#EFF0EF] text-chattext shadow-sm'
                 }`}
               >
@@ -206,3 +207,4 @@ const ChatBot = () => {
 };
 
 export default ChatBot;
+
