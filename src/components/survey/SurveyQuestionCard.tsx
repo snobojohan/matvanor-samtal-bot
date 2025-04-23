@@ -29,7 +29,7 @@ const SurveyQuestionCard: React.FC<SurveyQuestionCardProps> = ({
   const formatQuestionId = (value: string) => {
     return value
       .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-') // Replace special chars with hyphens
+      .replace(/[^a-z0-9_]+/g, '-') // Allow underscores, replace other special chars with hyphens
       .replace(/^-+|-+$/g, '') // Remove leading/trailing hyphens
       .replace(/-+/g, '-'); // Replace multiple hyphens with single hyphen
   };
