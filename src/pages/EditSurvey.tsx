@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Save } from 'lucide-react';
@@ -10,6 +9,7 @@ import SurveyQuestionCard from '@/components/survey/SurveyQuestionCard';
 import { SurveyQuestion, SurveyData } from '@/types/survey';
 import QuestionFlow from '@/components/survey/QuestionFlow';
 import { supabase } from '@/integrations/supabase/client';
+import AddQuestionButton from '@/components/survey/AddQuestionButton';
 
 const EditSurvey = () => {
   const [questions, setQuestions] = useState<SurveyData>(surveyQuestions);
@@ -17,7 +17,6 @@ const EditSurvey = () => {
   const [isSaving, setIsSaving] = useState(false);
   const { toast } = useToast();
 
-  // Load the active configuration on mount
   useEffect(() => {
     loadActiveConfiguration();
   }, []);
@@ -32,7 +31,6 @@ const EditSurvey = () => {
 
       if (error) throw error;
       if (data?.questions) {
-        // Cast the JSON data to the correct SurveyData type
         setQuestions(data.questions as SurveyData);
       }
     } catch (error) {
@@ -74,6 +72,18 @@ const EditSurvey = () => {
     }
   };
 
+  const handleAddQuestion = () => {
+    const newQuestionId = `question_${Object.keys(questions).length + 1}`;
+    setQuestions((prev) => ({
+      ...prev,
+      [newQuestionId]: {
+        message: '',
+        options: [''],
+      },
+    }));
+    setSelectedQuestion(newQuestionId);
+  };
+
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="flex items-center justify-between mb-8">
@@ -95,8 +105,8 @@ const EditSurvey = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left panel: Question list */}
         <div className="bg-gray-50 p-4 rounded-lg">
+          <AddQuestionButton onAdd={handleAddQuestion} />
           <h2 className="font-bold mb-4">Questions</h2>
           <div className="space-y-2 max-h-[70vh] overflow-y-auto pr-2">
             {Object.entries(questions).map(([questionId, question]) => (
@@ -135,7 +145,6 @@ const EditSurvey = () => {
           </div>
         </div>
 
-        {/* Middle panel: Question details */}
         <div>
           {selectedQuestion ? (
             <Card>
@@ -149,6 +158,7 @@ const EditSurvey = () => {
                       [selectedQuestion]: updatedQuestion,
                     }));
                   }}
+                  availableQuestions={Object.keys(questions).filter(id => id !== selectedQuestion)}
                 />
               </CardContent>
             </Card>
@@ -159,7 +169,6 @@ const EditSurvey = () => {
           )}
         </div>
 
-        {/* Right panel: Question flow */}
         <div className="bg-gray-50 p-4 rounded-lg">
           <h2 className="font-bold mb-4">Question Flow</h2>
           <div className="bg-white p-4 rounded-md">
