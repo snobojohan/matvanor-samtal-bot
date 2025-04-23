@@ -47,16 +47,33 @@ const ChatBot = () => {
       return;
     }
 
+    // Normalize the answer to lowercase for key matching
+    const normalizedAnswer = answer.toLowerCase();
+    
     // Create the key format for option-specific next question
-    const nextOptionKey = `next_${answer.toLowerCase()}`;
+    const nextOptionKey = `next_${normalizedAnswer}`;
+    
+    // Debug to see what's happening
+    console.log('Current question:', currentQuestion);
+    console.log('Answer:', answer);
+    console.log('Next option key:', nextOptionKey);
+    console.log('Available next paths:', Object.keys(question).filter(key => key.startsWith('next')));
     
     // Check if there's a specific next question for this answer
-    const nextQuestionKey = question.options && question[nextOptionKey] 
-      ? question[nextOptionKey]
-      : question.next;
+    let nextQuestionKey;
+    if (question.options && question[nextOptionKey]) {
+      nextQuestionKey = question[nextOptionKey];
+      console.log('Found specific next question:', nextQuestionKey);
+    } else if (question.next) {
+      nextQuestionKey = question.next;
+      console.log('Using default next question:', nextQuestionKey);
+    }
 
     if (nextQuestionKey) {
+      console.log('Setting next question to:', nextQuestionKey);
       setCurrentQuestion(nextQuestionKey);
+    } else {
+      console.error('No next question found!');
     }
   };
 
