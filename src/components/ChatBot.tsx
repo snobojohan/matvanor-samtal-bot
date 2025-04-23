@@ -125,43 +125,44 @@ const ChatBot = () => {
 
   return (
     <div className="flex flex-col h-screen bg-chatbg text-chattext">
-      {/* Sticky Header with small fadeout */}
+      {/* Sticky Header */}
       <div className="sticky top-0 z-10 bg-chatbg">
-        <div className="p-4">
+        <div className="p-4 max-w-[672px] mx-auto w-full">
           <h1 className="text-xl font-semibold">Undersökning om matvanor</h1>
         </div>
-        <div className="h-2 bg-gradient-to-b from-chatbg to-transparent" />
       </div>
 
       {/* Main Chat Area */}
-      <div className="flex-1 p-4 space-y-4">
-        {chatHistory.map((message, index) => {
-          const opacity = Math.max(0.4, 1 - (chatHistory.length - 1 - index) * 0.15);
-          return (
-            <div
-              key={index}
-              className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
-              style={{ opacity }}
-            >
+      <div className="flex-1 p-4">
+        <div className="max-w-[672px] mx-auto space-y-4">
+          {chatHistory.map((message, index) => {
+            const opacity = Math.max(0.4, 1 - (chatHistory.length - 1 - index) * 0.15);
+            return (
               <div
-                className={`rounded-lg p-3 max-w-[80%] ${
-                  message.type === 'user'
-                    ? 'bg-chatblue text-white'
-                    : 'bg-white text-chattext shadow-sm'
-                }`}
+                key={index}
+                className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
+                style={{ opacity }}
               >
-                {message.content}
+                <div
+                  className={`rounded-lg p-3 max-w-[80%] ${
+                    message.type === 'user'
+                      ? 'bg-chatblue text-white'
+                      : 'bg-white text-chattext shadow-sm'
+                  }`}
+                >
+                  {message.content}
+                </div>
               </div>
-            </div>
-          );
-        })}
-        {isTyping && <TypingIndicator />}
-        <div ref={chatEndRef} />
+            );
+          })}
+          {isTyping && <TypingIndicator />}
+          <div ref={chatEndRef} />
+        </div>
       </div>
 
       {/* Sticky Bottom Section */}
       <div className="sticky bottom-0 bg-chatbg/80 backdrop-blur-sm p-4">
-        <div className="max-w-2xl mx-auto">
+        <div className="max-w-[672px] mx-auto">
           {currentQuestionData?.options ? (
             <div className="flex flex-wrap gap-2">
               {currentQuestionData.options.map((option) => (
@@ -177,12 +178,12 @@ const ChatBot = () => {
             </div>
           ) : (
             !currentQuestionData?.end && (
-              <div className="flex gap-2">
+              <div className="relative">
                 <Textarea
                   value={userInput}
                   onChange={(e) => setUserInput(e.target.value)}
                   placeholder="Skriv ditt svar här..."
-                  className="flex-1 bg-white text-chattext"
+                  className="pr-12 bg-white text-chattext rounded-2xl shadow-lg min-h-[56px] py-4"
                   onKeyPress={(e) => {
                     if (e.key === 'Enter' && !e.shiftKey) {
                       e.preventDefault();
@@ -192,9 +193,9 @@ const ChatBot = () => {
                 />
                 <Button 
                   onClick={handleSubmit}
-                  className="bg-chatblue hover:bg-chatblue/90"
+                  className="absolute right-3 bottom-3 p-0 h-8 w-8 bg-chatblue hover:bg-chatblue/90 rounded-full"
                 >
-                  <Send className="text-white" />
+                  <Send className="h-4 w-4 text-white" />
                 </Button>
               </div>
             )
