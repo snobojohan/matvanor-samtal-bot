@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageSquare, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -38,7 +37,7 @@ const ChatBot = () => {
       const { error } = await supabase
         .from('survey_responses')
         .insert({
-          questionId: response.questionId,
+          questionid: response.questionId,  // Changed from questionId to questionid
           answer: response.answer,
           timestamp: response.timestamp
         });
