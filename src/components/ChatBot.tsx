@@ -169,7 +169,7 @@ const ChatBot = () => {
                 <Button
                   key={option}
                   onClick={() => handleAnswer(option)}
-                  className="bg-chatblue text-white hover:bg-chatblue/90 transition-colors"
+                  className="bg-[#091B1F] text-white hover:bg-[#091B1F]/90 transition-colors"
                   size="lg"
                 >
                   {option}
@@ -193,7 +193,7 @@ const ChatBot = () => {
                 />
                 <Button 
                   onClick={handleSubmit}
-                  className="absolute right-3 bottom-3 p-0 h-8 w-8 bg-chatblue hover:bg-chatblue/90 rounded-full"
+                  className="absolute right-3 bottom-3 p-0 h-8 w-8 bg-[#091B1F] hover:bg-[#091B1F]/90 rounded-full"
                 >
                   <Send className="h-4 w-4 text-white" />
                 </Button>
