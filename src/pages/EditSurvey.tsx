@@ -84,6 +84,42 @@ const EditSurvey = () => {
     setSelectedQuestion(newQuestionId);
   };
 
+  const handleQuestionIdChange = (oldId: string, newId: string) => {
+    if (oldId === newId || questions[newId]) return; // Prevent duplicate IDs
+
+    const updatedQuestions = { ...questions };
+    
+    // Update the question ID
+    updatedQuestions[newId] = updatedQuestions[oldId];
+    delete updatedQuestions[oldId];
+
+    // Update any references to this question ID in other questions
+    Object.keys(updatedQuestions).forEach((qId) => {
+      const q = updatedQuestions[qId];
+      
+      // Update simple next path
+      if (q.next === oldId) {
+        updatedQuestions[qId] = { ...q, next: newId };
+      }
+
+      // Update option-specific next paths
+      if (q.options) {
+        q.options.forEach((option) => {
+          const nextKey = `next_${option.toLowerCase()}`;
+          if (q[nextKey] === oldId) {
+            updatedQuestions[qId] = { 
+              ...updatedQuestions[qId],
+              [nextKey]: newId 
+            };
+          }
+        });
+      }
+    });
+
+    setQuestions(updatedQuestions);
+    setSelectedQuestion(newId);
+  };
+
   return (
     <div className="container mx-auto py-8 px-4">
       <div className="flex items-center justify-between mb-8">
@@ -160,6 +196,7 @@ const EditSurvey = () => {
                     }));
                   }}
                   availableQuestions={Object.keys(questions).filter(id => id !== selectedQuestion)}
+                  onQuestionIdChange={handleQuestionIdChange}
                 />
               </CardContent>
             </Card>

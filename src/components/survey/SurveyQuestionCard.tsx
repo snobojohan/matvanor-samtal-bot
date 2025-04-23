@@ -15,6 +15,7 @@ interface SurveyQuestionCardProps {
   question: SurveyQuestion;
   onUpdate: (question: SurveyQuestion) => void;
   availableQuestions: string[];
+  onQuestionIdChange?: (oldId: string, newId: string) => void;
 }
 
 const SurveyQuestionCard: React.FC<SurveyQuestionCardProps> = ({
@@ -22,7 +23,23 @@ const SurveyQuestionCard: React.FC<SurveyQuestionCardProps> = ({
   question,
   onUpdate,
   availableQuestions,
+  onQuestionIdChange,
 }) => {
+  const formatQuestionId = (value: string) => {
+    return value
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-') // Replace special chars with hyphens
+      .replace(/^-+|-+$/g, '') // Remove leading/trailing hyphens
+      .replace(/-+/g, '-'); // Replace multiple hyphens with single hyphen
+  };
+
+  const handleIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newId = formatQuestionId(e.target.value);
+    if (onQuestionIdChange && newId !== questionId) {
+      onQuestionIdChange(questionId, newId);
+    }
+  };
+
   const handleMessageChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     onUpdate({ ...question, message: e.target.value });
   };
@@ -99,7 +116,15 @@ const SurveyQuestionCard: React.FC<SurveyQuestionCardProps> = ({
     <div className="space-y-4">
       <div>
         <Label>Question ID</Label>
-        <Input value={questionId} disabled />
+        <Input 
+          value={questionId}
+          onChange={handleIdChange}
+          placeholder="question-id"
+          className="font-mono"
+        />
+        <p className="text-xs text-muted-foreground mt-1">
+          IDs are automatically formatted to be URL-friendly
+        </p>
       </div>
 
       <div>
