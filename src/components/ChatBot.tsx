@@ -195,7 +195,7 @@ const ChatBot = () => {
                   onClick={handleSubmit}
                   className="absolute right-3 bottom-3 p-0 h-8 w-8 bg-[#091B1F] hover:bg-[#091B1F]/90 rounded-full"
                 >
-                  <Send className="h-4 w-4 text-white" />
+                  <Send className="h-4 w-4 text-white send-special" />
                 </Button>
               </div>
             )
