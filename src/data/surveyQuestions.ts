@@ -1,3 +1,4 @@
+
 import { SurveyData } from '@/types/survey';
 
 export const surveyQuestions: SurveyData = {
@@ -5,8 +6,7 @@ export const surveyQuestions: SurveyData = {
     message: "Hej och välkommen till vår undersökning om matvanor! Vi är intresserade av att förstå hur du och din familj hanterar mat i vardagen. Dina svar hjälper oss att förstå verkliga utmaningar och behov. Undersökningen tar cirka 10-15 minuter. Vill du börja?",
     options: ["Ja, jag vill delta", "Nej tack"],
     next_ja: "intro",
-    next_nej: "early_exit",
-    next: "intro"
+    next_nej: "early_exit"
   },
   early_exit: {
     message: "Tack ändå! Om du har några frågor är du välkommen att kontakta oss.",
@@ -15,176 +15,167 @@ export const surveyQuestions: SurveyData = {
   intro: {
     message: "Tack för att du deltar! Först skulle jag vilja veta lite om dig. Hur ser din familjesituation ut?",
     options: ["Bor ensam", "Sambo/gift utan barn", "Familj med barn", "Har barn vissa veckor", "Annat"],
-    next_bor: "living_location",
-    next_sambo: "living_location",
     next_familj: "teenagers_question",
     next_har: "teenagers_question",
-    next_annat: "living_location",
+    next: "living_location"
+  },
+  teenagers_question: {
+    message: "Finns det tonåringar i hushållet?",
+    options: ["Ja", "Nej"],
     next: "living_location"
   },
   living_location: {
     message: "Var bor du?",
-    options: ["Storstad", "Mindre stad", "Landsbygd"],
-    next_storstad: "income",
-    next_mindre: "income",
-    next_landsbygd: "income",
-    next: "income"
+    options: ["Landsbygd", "Mindre stad", "Storstad"],
+    next: "education_level"
   },
-  income: {
-    message: "Ungefär hur hög är din hushållsinkomst per månad?",
-    options: ["Under 25 000 kr", "25 000 - 40 000 kr", "40 000 - 60 000 kr", "Över 60 000 kr"],
-    next_under: "food_planning",
-    next_25: "food_planning",
-    next_40: "food_planning",
-    next_over: "food_planning",
-    next: "food_planning"
+  education_level: {
+    message: "Vilken är din högsta avslutade utbildning?",
+    options: ["Grundskola", "Gymnasium", "Högskola/Universitet", "Annan eftergymnasial utbildning"],
+    next: "daily_routine"
   },
-  food_planning: {
-    message: "Hur planerar du dina måltider?",
-    options: ["Veckoplanering", "Några dagar i förväg", "Dagligen", "Improviserar"],
-    next_veckoplanering: "shopping_frequency",
-    next_några: "shopping_frequency",
-    next_dagligen: "shopping_frequency",
-    next_improviserar: "shopping_frequency",
+  daily_routine: {
+    message: "Berätta hur en vanlig vecka ser ut hemma hos er när det gäller maten – frukost, lunch, middag.",
+    type: "text",
+    next: "meal_planning"
+  },
+  meal_planning: {
+    message: "Hur brukar du/ni komma på vad ni ska äta?",
+    type: "text",
+    next: "decision_making"
+  },
+  decision_making: {
+    message: "Vem bestämmer vad som lagas och handlas?",
+    type: "text",
     next: "shopping_frequency"
   },
   shopping_frequency: {
-    message: "Hur ofta handlar du mat?",
-    options: ["Varje dag", "Flera gånger i veckan", "En gång i veckan", "Sällan"],
-    next_varje: "food_waste",
-    next_flera: "food_waste",
-    next_en: "food_waste",
-    next_sällan: "food_waste",
-    next: "food_waste"
-  },
-  food_waste: {
-    message: "Slänger du ofta mat?",
-    options: ["Ja, ofta", "Ibland", "Sällan", "Aldrig"],
-    next_ja: "reasons_for_waste",
-    next_ibland: "reasons_for_waste",
-    next_sällan: "cooking_skills",
-    next_aldrig: "cooking_skills",
-    next: "cooking_skills"
-  },
-  reasons_for_waste: {
-    message: "Varför slänger du mat?",
-    options: ["För mycket inköp", "Dålig planering", "Mat blir dålig", "Rester äts inte"],
-    next_för: "cooking_skills",
-    next_dålig: "cooking_skills",
-    next_mat: "cooking_skills",
-    next_rester: "cooking_skills",
-    next: "cooking_skills"
-  },
-  cooking_skills: {
-    message: "Hur skulle du beskriva dina matlagningskunskaper?",
-    options: ["Avancerad", "Bekväm", "Grundläggande", "Inga"],
-    next_avancerad: "time_for_cooking",
-    next_bekväm: "time_for_cooking",
-    next_grundläggande: "time_for_cooking",
-    next_inga: "time_for_cooking",
-    next: "time_for_cooking"
-  },
-  time_for_cooking: {
-    message: "Hur mycket tid lägger du på matlagning per dag?",
-    options: ["Mindre än 30 min", "30-60 min", "1-2 timmar", "Mer än 2 timmar"],
-    next_mindre: "eating_habits",
-    next_30: "eating_habits",
-    next_1: "eating_habits",
-    next_mer: "eating_habits",
-    next: "eating_habits"
-  },
-  eating_habits: {
-    message: "Hur ofta äter du hemma?",
-    options: ["Varje dag", "Mest hemma", "Mest ute", "Aldrig hemma"],
-    next_varje: "food_preferences",
-    next_mest: "food_preferences",
-    next_ute: "food_preferences",
-    next_aldrig: "food_preferences",
-    next: "food_preferences"
-  },
-  food_preferences: {
-    message: "Har du några speciella kostpreferenser eller allergier?",
-    options: ["Vegetariskt", "Veganskt", "Glutenfritt", "Laktosfritt", "Annat", "Inga"],
-    next_vegetariskt: "organic_food",
-    next_veganskt: "organic_food",
-    next_glutenfritt: "organic_food",
-    next_laktosfritt: "organic_food",
-    next_annat: "organic_food",
-    next_inga: "organic_food",
-    next: "organic_food"
-  },
-  organic_food: {
-    message: "Hur viktigt är ekologisk mat för dig?",
-    options: ["Mycket viktigt", "Viktigt", "Inte så viktigt", "Inte alls viktigt"],
-    next_mycket: "food_information",
-    next_viktigt: "food_information",
-    next_inte: "food_information",
-    next: "food_information"
-  },
-  food_information: {
-    message: "Hur mycket information läser du om maten du köper?",
-    options: ["Alltid", "Ofta", "Ibland", "Aldrig"],
-    next_alltid: "shopping_list",
-    next_ofta: "shopping_list",
-    next_ibland: "shopping_list",
-    next_aldrig: "shopping_list",
-    next: "shopping_list"
-  },
-  shopping_list: {
-    message: "Använder du inköpslista?",
-    options: ["Alltid", "Ofta", "Ibland", "Aldrig"],
-    next_alltid: "budget",
-    next_ofta: "budget",
-    next_ibland: "budget",
-    next_aldrig: "budget",
-    next: "budget"
-  },
-  budget: {
-    message: "Har du en budget för matinköp?",
-    options: ["Ja", "Nej"],
-    next_ja: "teenagers_question",
-    next_nej: "teenagers_question",
-    next: "teenagers_question"
-  },
-  teenagers_question: {
-    message: "Har du tonåringar i hushållet?",
-    options: ["Ja", "Nej"],
-    next_ja: "teenagers_influence",
-    next_nej: "cooking_together",
-    next: "cooking_together"
-  },
-  teenagers_influence: {
-    message: "Påverkar tonåringarna matinköpen?",
-    options: ["Ja, mycket", "Ja, lite", "Inte alls"],
-    next_ja: "cooking_together",
-    next_inte: "cooking_together",
-    next: "cooking_together"
-  },
-  cooking_together: {
-    message: "Lagrar ni mat tillsammans?",
-    options: ["Ja, ofta", "Ibland", "Sällan", "Aldrig"],
-    next_ja: "satisfaction",
-    next_ibland: "satisfaction",
-    next_sällan: "satisfaction",
-    next_aldrig: "satisfaction",
-    next: "satisfaction"
-  },
-  satisfaction: {
-    message: "Är du nöjd med era matvanor?",
-    options: ["Ja, mycket", "Nöjd", "Inte nöjd", "Mycket missnöjd"],
-    next_ja: "suggestions",
-    next_nöjd: "suggestions",
-    next_inte: "suggestions",
-    next_mycket: "suggestions",
-    next: "suggestions"
-  },
-  suggestions: {
-    message: "Har du förslag på hur vi kan hjälpa dig med dina matvanor?",
+    message: "Hur ofta handlar ni, och hur brukar det gå till?",
     type: "text",
-    next: "end_message"
+    next: "eating_out"
   },
-  end_message: {
-    message: "Tack för din medverkan!",
+  eating_out: {
+    message: "Hur ofta blir det att ni äter ute eller beställer hem mat i veckorna?",
+    type: "text",
+    next: "last_meal_planning"
+  },
+  last_meal_planning: {
+    message: "Nu skulle jag vilja höra om några konkreta exempel från din vardag. Kan du berätta om senast ni skulle laga mat – hur visste ni vad ni skulle äta och om ni hade allt hemma?",
+    type: "text",
+    next: "no_plan_day"
+  },
+  no_plan_day: {
+    message: "Berätta om en dag då det inte fanns någon plan för maten – vad hände då?",
+    type: "text",
+    next: "no_plan_meals"
+  },
+  no_plan_meals: {
+    message: "Vad åt ni den dagen till frukost/lunch/middag?",
+    type: "text",
+    next: "no_plan_feelings"
+  },
+  no_plan_feelings: {
+    message: "Var det något som kändes extra rörigt, stressigt eller funkade särskilt bra den dagen?",
+    type: "text",
+    next: "no_meal_plan"
+  },
+  no_meal_plan: {
+    message: "Nu skulle jag vilja höra om/hur ni matplanerar. Vad gör ni om ni inte vet vad ni ska äta?",
+    type: "text",
+    next: "meal_facilitation"
+  },
+  meal_facilitation: {
+    message: "Har ni något sätt att underlätta matvardagen?",
+    type: "text",
+    next: "support_tools"
+  },
+  support_tools: {
+    message: "Använder ni något stöd? App? Lista? Rutiner?",
+    type: "text",
+    next: "previous_methods"
+  },
+  previous_methods: {
+    message: "Har ni testat någon app, tjänst, matkasse eller metod tidigare för att underlätta matplaneringen?",
+    options: ["Ja", "Nej"],
+    next_ja: "previous_methods_details",
+    next_nej: "change_food_habits"
+  },
+  previous_methods_details: {
+    message: "Vilken app, tjänst eller metod testade ni och hur fungerade det?",
+    type: "text",
+    next: "still_using"
+  },
+  still_using: {
+    message: "Använder ni den fortfarande?",
+    options: ["Ja", "Nej"],
+    next_ja: "why_still_using",
+    next_nej: "why_stopped"
+  },
+  why_still_using: {
+    message: "Vad är det som gör att ni fortsätter använda den?",
+    type: "text",
+    next: "change_food_habits"
+  },
+  why_stopped: {
+    message: "Varför slutade ni använda den?",
+    type: "text",
+    next: "change_food_habits"
+  },
+  change_food_habits: {
+    message: "Nu skulle jag vilja höra om dina tankar kring matvanor och eventuella förändringar. Har du funderat på att ändra något kring maten den senaste tiden?",
+    options: ["Ja", "Nej"],
+    next_ja: "change_food_habits_details",
+    next_nej: "desired_changes"
+  },
+  change_food_habits_details: {
+    message: "Vad handlade det om? Hur tänkte du då?",
+    type: "text",
+    next: "tried_changes"
+  },
+  tried_changes: {
+    message: "Försökte du ändra matvanor, hur gick det? Vad ändrade du?",
+    type: "text",
+    next: "kept_habits"
+  },
+  kept_habits: {
+    message: "Har du hållit i de nya vanorna?",
+    options: ["Ja", "Delvis", "Nej"],
+    next_ja: "how_kept_habits",
+    next_delvis: "how_kept_habits",
+    next_nej: "why_difficult"
+  },
+  how_kept_habits: {
+    message: "Hur har du lyckats hålla i de nya vanorna?",
+    type: "text",
+    next: "desired_changes"
+  },
+  why_difficult: {
+    message: "Vad är svårt med att hålla i nya matvanor?",
+    type: "text",
+    next: "desired_changes"
+  },
+  desired_changes: {
+    message: "Är det något du själv skulle vilja förändra med hur ni äter idag?",
+    type: "text",
+    next: "priorities"
+  },
+  priorities: {
+    message: "Många försöker tänka mer på hälsa, plånbok eller klimat – är något av det relevant för dig?",
+    type: "text",
+    next: "other_contacts"
+  },
+  other_contacts: {
+    message: "Vi närmar oss slutet av undersökningen. Finns det någon annan du tycker vi borde prata med om matvanor?",
+    type: "text",
+    next: "missed_questions"
+  },
+  missed_questions: {
+    message: "Är det något du tycker att vi glömt att fråga om?",
+    type: "text",
+    next: "thank_you"
+  },
+  thank_you: {
+    message: "Tack så mycket för dina svar! De kommer att hjälpa oss att bättre förstå hur människor hanterar mat i vardagen. Om du har några frågor eller vill lägga till något, är du välkommen att kontakta oss.",
     end: true
   }
 };
