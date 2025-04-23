@@ -126,7 +126,7 @@ const ChatBot = () => {
     <div className="flex flex-col h-screen bg-chatbg text-chattext">
       {/* Sticky Header */}
       <div className="sticky top-0 z-10 bg-chatbg">
-        <div className="p-2 max-w-[672px] mx-auto w-full">
+        <div className="py-2 max-w-[672px] mx-auto w-full">
           <h1 className="text-xl font-semibold">Undersökning om matvanor</h1>
         </div>
       </div>
