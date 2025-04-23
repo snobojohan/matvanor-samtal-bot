@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { HelpCircle, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -8,6 +7,7 @@ import { surveyQuestions } from '@/data/surveyQuestions';
 import { useSurvey } from '@/context/SurveyContext';
 import { UserResponse } from '@/types/survey';
 import { supabase } from '@/integrations/supabase/client';
+import TypingIndicator from './TypingIndicator';
 
 const ChatBot = () => {
   const [currentQuestion, setCurrentQuestion] = useState('welcome');
@@ -16,6 +16,7 @@ const ChatBot = () => {
   const [sessionId] = useState(() => crypto.randomUUID());
   const chatEndRef = useRef<HTMLDivElement>(null);
   const { addResponse, responses } = useSurvey();
+  const [isTyping, setIsTyping] = useState(false);
 
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -25,7 +26,11 @@ const ChatBot = () => {
     if (currentQuestion) {
       const question = surveyQuestions[currentQuestion];
       if (question) {
-        setChatHistory(prev => [...prev, { type: 'bot', content: question.message }]);
+        setIsTyping(true);
+        setTimeout(() => {
+          setChatHistory(prev => [...prev, { type: 'bot', content: question.message }]);
+          setIsTyping(false);
+        }, 1500);
       }
     }
   }, [currentQuestion]);
@@ -141,6 +146,7 @@ const ChatBot = () => {
               </div>
             </div>
           ))}
+          {isTyping && <TypingIndicator />}
           <div ref={chatEndRef} />
         </div>
       </Card>
