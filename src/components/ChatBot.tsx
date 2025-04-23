@@ -8,6 +8,7 @@ import { useSurvey } from '@/context/SurveyContext';
 import { UserResponse } from '@/types/survey';
 import { supabase } from '@/integrations/supabase/client';
 import TypingIndicator from './TypingIndicator';
+import { Link } from 'react-router-dom';
 
 const ChatBot = () => {
   const [currentQuestion, setCurrentQuestion] = useState('welcome');
@@ -127,8 +128,14 @@ const ChatBot = () => {
     <div className="flex flex-col h-screen bg-chatbg text-chattext">
       {/* Sticky Header */}
       <div className="sticky top-0 z-10 bg-chatbg pr-4 pl-4">
-        <div className="pb-2 pt-2 max-w-[672px] mx-auto w-full">
+        <div className="pb-2 pt-2 max-w-[672px] mx-auto w-full flex justify-between items-center">
           <h1 className="text-xl font-black font-nunito">Undersökning om matvanor</h1>
+          <Link 
+            to="/visualization" 
+            className="text-sm text-[#2D9CDB] hover:underline"
+          >
+            View Flow
+          </Link>
         </div>
       </div>
 
@@ -207,4 +214,3 @@ const ChatBot = () => {
 };
 
 export default ChatBot;
-
