@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { HelpCircle, Send } from 'lucide-react';
+import { Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
@@ -30,7 +30,7 @@ const ChatBot = () => {
         setTimeout(() => {
           setChatHistory(prev => [...prev, { type: 'bot', content: question.message }]);
           setIsTyping(false);
-        }, 1500);
+        }, 700);
       }
     }
   }, [currentQuestion]);
@@ -158,8 +158,7 @@ const ChatBot = () => {
               <Button
                 key={option}
                 onClick={() => handleAnswer(option)}
-                variant="outline"
-                className="flex-1"
+                className="flex-1 shadow-sm hover:shadow-md transition-shadow"
               >
                 {option}
               </Button>
