@@ -124,9 +124,9 @@ const ChatBot = () => {
   const currentQuestionData = surveyQuestions[currentQuestion];
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen bg-chatbg text-chattext">
       {/* Sticky Header */}
-      <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-sm border-b p-4">
+      <div className="sticky top-0 z-10 bg-chatbg/80 backdrop-blur-sm p-4">
         <h1 className="text-xl font-semibold">Undersökning om matvanor</h1>
       </div>
 
@@ -144,8 +144,8 @@ const ChatBot = () => {
                 <div
                   className={`rounded-lg p-3 max-w-[80%] ${
                     message.type === 'user'
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-gray-100 text-gray-800'
+                      ? 'bg-chatblue text-white'
+                      : 'bg-white text-chattext shadow-sm'
                   }`}
                 >
                   {message.content}
@@ -159,7 +159,7 @@ const ChatBot = () => {
       </div>
 
       {/* Sticky Bottom Section */}
-      <div className="sticky bottom-0 bg-background/80 backdrop-blur-sm border-t p-4">
+      <div className="sticky bottom-0 bg-chatbg/80 backdrop-blur-sm p-4">
         <div className="max-w-2xl mx-auto">
           {currentQuestionData?.options ? (
             <div className="grid grid-cols-1 gap-2">
@@ -167,7 +167,7 @@ const ChatBot = () => {
                 <Button
                   key={option}
                   onClick={() => handleAnswer(option)}
-                  className="w-full bg-[#111827] text-white hover:bg-[#1f2937] transition-colors"
+                  className="w-full bg-chatblue text-white hover:bg-chatblue/90 transition-colors"
                   size="lg"
                 >
                   {option}
@@ -181,7 +181,7 @@ const ChatBot = () => {
                   value={userInput}
                   onChange={(e) => setUserInput(e.target.value)}
                   placeholder="Skriv ditt svar här..."
-                  className="flex-1 bg-white"
+                  className="flex-1 bg-white text-chattext"
                   onKeyPress={(e) => {
                     if (e.key === 'Enter' && !e.shiftKey) {
                       e.preventDefault();
@@ -191,9 +191,9 @@ const ChatBot = () => {
                 />
                 <Button 
                   onClick={handleSubmit}
-                  className="bg-[#111827] hover:bg-[#1f2937]"
+                  className="bg-chatblue hover:bg-chatblue/90"
                 >
-                  <Send />
+                  <Send className="text-white" />
                 </Button>
               </div>
             )
