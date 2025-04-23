@@ -1,6 +1,5 @@
-
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageSquare } from 'lucide-react';
+import { MessageSquare, PaperPlane } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
@@ -47,25 +46,20 @@ const ChatBot = () => {
       return;
     }
 
-    // Clean up the answer to make it simpler for key matching
-    // Strip punctuation, make lowercase, and take just first word for multi-word options
     const simplifiedAnswer = answer.toLowerCase().replace(/[.,!?]/g, '').split(' ')[0];
     
-    // Debug to see what's happening
     console.log('Current question:', currentQuestion);
     console.log('Original answer:', answer);
     console.log('Simplified answer:', simplifiedAnswer);
     
-    // Try different key formats that might exist in the data
     const possibleNextKeys = [
-      `next_${simplifiedAnswer}`,  // next_ja
-      `next_${answer.toLowerCase()}`, // For full answers like "next_ja, jag vill delta"
+      `next_${simplifiedAnswer}`,
+      `next_${answer.toLowerCase()}`,
     ];
     
     console.log('Possible next keys:', possibleNextKeys);
     console.log('Available next paths:', Object.keys(question).filter(key => key.startsWith('next')));
     
-    // Find the first matching next key
     let nextQuestionKey = null;
     for (const key of possibleNextKeys) {
       if (question[key]) {
@@ -75,7 +69,6 @@ const ChatBot = () => {
       }
     }
     
-    // If no specific path found, use the default next
     if (!nextQuestionKey && question.next) {
       nextQuestionKey = question.next;
       console.log('Using default next:', nextQuestionKey);
@@ -85,7 +78,7 @@ const ChatBot = () => {
       console.log('Setting next question to:', nextQuestionKey);
       setTimeout(() => {
         setCurrentQuestion(nextQuestionKey);
-      }, 100); // Small delay to ensure UI updates properly
+      }, 100);
     } else {
       console.error('No next question found!');
     }
@@ -155,7 +148,7 @@ const ChatBot = () => {
                   }
                 }}
               />
-              <Button onClick={handleSubmit}>Skicka</Button>
+              <Button onClick={handleSubmit}><PaperPlane /></Button>
             </div>
           )
         )}
