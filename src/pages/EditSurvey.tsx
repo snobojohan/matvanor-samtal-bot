@@ -106,7 +106,7 @@ const EditSurvey = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="bg-gray-50 p-4 rounded-lg">
-          <AddQuestionButton onAdd={handleAddQuestion} />
+          
           <h2 className="font-bold mb-4">Questions</h2>
           <div className="space-y-2 max-h-[70vh] overflow-y-auto pr-2">
             {Object.entries(questions).map(([questionId, question]) => (
@@ -143,6 +143,7 @@ const EditSurvey = () => {
               </div>
             ))}
           </div>
+          <AddQuestionButton onAdd={handleAddQuestion} />
         </div>
 
         <div>
