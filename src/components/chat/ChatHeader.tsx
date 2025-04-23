@@ -7,7 +7,7 @@ const ChatHeader = () => (
     <div className="pb-2 pt-2 max-w-[672px] mx-auto w-full flex justify-between items-center">
       <h1 className="text-xl font-black font-nunito">Undersökning om matvanor</h1>
       <Link 
-        to="/visualization" 
+        to="/flow" 
         className="text-sm text-[#2D9CDB] hover:underline"
       >
         View Flow
