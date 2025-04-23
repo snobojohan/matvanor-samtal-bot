@@ -47,31 +47,45 @@ const ChatBot = () => {
       return;
     }
 
-    // Normalize the answer to lowercase for key matching
-    const normalizedAnswer = answer.toLowerCase();
-    
-    // Create the key format for option-specific next question
-    const nextOptionKey = `next_${normalizedAnswer}`;
+    // Clean up the answer to make it simpler for key matching
+    // Strip punctuation, make lowercase, and take just first word for multi-word options
+    const simplifiedAnswer = answer.toLowerCase().replace(/[.,!?]/g, '').split(' ')[0];
     
     // Debug to see what's happening
     console.log('Current question:', currentQuestion);
-    console.log('Answer:', answer);
-    console.log('Next option key:', nextOptionKey);
+    console.log('Original answer:', answer);
+    console.log('Simplified answer:', simplifiedAnswer);
+    
+    // Try different key formats that might exist in the data
+    const possibleNextKeys = [
+      `next_${simplifiedAnswer}`,  // next_ja
+      `next_${answer.toLowerCase()}`, // For full answers like "next_ja, jag vill delta"
+    ];
+    
+    console.log('Possible next keys:', possibleNextKeys);
     console.log('Available next paths:', Object.keys(question).filter(key => key.startsWith('next')));
     
-    // Check if there's a specific next question for this answer
-    let nextQuestionKey;
-    if (question.options && question[nextOptionKey]) {
-      nextQuestionKey = question[nextOptionKey];
-      console.log('Found specific next question:', nextQuestionKey);
-    } else if (question.next) {
+    // Find the first matching next key
+    let nextQuestionKey = null;
+    for (const key of possibleNextKeys) {
+      if (question[key]) {
+        nextQuestionKey = question[key];
+        console.log(`Found match with key: ${key} -> ${nextQuestionKey}`);
+        break;
+      }
+    }
+    
+    // If no specific path found, use the default next
+    if (!nextQuestionKey && question.next) {
       nextQuestionKey = question.next;
-      console.log('Using default next question:', nextQuestionKey);
+      console.log('Using default next:', nextQuestionKey);
     }
 
     if (nextQuestionKey) {
       console.log('Setting next question to:', nextQuestionKey);
-      setCurrentQuestion(nextQuestionKey);
+      setTimeout(() => {
+        setCurrentQuestion(nextQuestionKey);
+      }, 100); // Small delay to ensure UI updates properly
     } else {
       console.error('No next question found!');
     }
