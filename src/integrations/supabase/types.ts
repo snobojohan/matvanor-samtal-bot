@@ -30,6 +30,33 @@ export type Database = {
         }
         Relationships: []
       }
+      survey_configurations: {
+        Row: {
+          created_at: string
+          id: string
+          is_active: boolean
+          name: string
+          questions: Json
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          questions: Json
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          questions?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
       survey_responses: {
         Row: {
           answer: string
