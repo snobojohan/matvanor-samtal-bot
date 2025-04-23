@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { SurveyQuestion } from '@/types/survey';
 import { Input } from '@/components/ui/input';
@@ -115,8 +116,9 @@ const SurveyQuestionCard: React.FC<SurveyQuestionCardProps> = ({
   return (
     <div className="space-y-4">
       <div>
-        <Label>Question ID</Label>
+        <Label htmlFor="question-id">Question ID</Label>
         <Input 
+          id="question-id"
           value={questionId}
           onChange={handleIdChange}
           placeholder="question-id"

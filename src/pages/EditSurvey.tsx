@@ -86,6 +86,7 @@ const EditSurvey = () => {
 
   const handleQuestionIdChange = (oldId: string, newId: string) => {
     if (oldId === newId || questions[newId]) return; // Prevent duplicate IDs
+    if (!newId || newId.trim() === '') return; // Prevent empty IDs
 
     const updatedQuestions = { ...questions };
     
