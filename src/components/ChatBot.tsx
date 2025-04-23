@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { HelpCircle, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -132,7 +133,7 @@ const ChatBot = () => {
                 }`}
               >
                 {message.type === 'bot' && (
-                  <HelpCircle className="inline-block mr-2 h-4 w-4" />
+                  <HelpCircle className="inline-block mr-2 h-4 w-4 text-gray-500" />
                 )}
                 {message.content}
               </div>
