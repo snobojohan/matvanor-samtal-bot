@@ -1,18 +1,20 @@
+
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageSquare, PaperPlane } from 'lucide-react';
+import { MessageSquare, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
 import { surveyQuestions } from '@/data/surveyQuestions';
 import { useSurvey } from '@/context/SurveyContext';
 import { UserResponse } from '@/types/survey';
+import { supabase } from '@/integrations/supabase/client';
 
 const ChatBot = () => {
   const [currentQuestion, setCurrentQuestion] = useState('welcome');
   const [userInput, setUserInput] = useState('');
   const [chatHistory, setChatHistory] = useState<Array<{ type: 'bot' | 'user', content: string }>>([]);
   const chatEndRef = useRef<HTMLDivElement>(null);
-  const { addResponse } = useSurvey();
+  const { addResponse, responses } = useSurvey();
 
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -31,6 +33,22 @@ const ChatBot = () => {
     scrollToBottom();
   }, [chatHistory]);
 
+  const saveResponsesToSupabase = async (responses: UserResponse[]) => {
+    try {
+      const { error } = await supabase
+        .from('survey_responses')
+        .insert(responses);
+      
+      if (error) {
+        console.error('Error saving responses to Supabase:', error);
+      } else {
+        console.log('Responses saved to Supabase successfully');
+      }
+    } catch (err) {
+      console.error('Failed to save responses:', err);
+    }
+  };
+
   const handleAnswer = (answer: string) => {
     setChatHistory(prev => [...prev, { type: 'user', content: answer }]);
     
@@ -40,6 +58,9 @@ const ChatBot = () => {
       timestamp: new Date().toISOString(),
     };
     addResponse(response);
+
+    // Save to Supabase when a response is added
+    saveResponsesToSupabase([response]);
 
     const question = surveyQuestions[currentQuestion];
     if (question.end) {
@@ -148,7 +169,7 @@ const ChatBot = () => {
                   }
                 }}
               />
-              <Button onClick={handleSubmit}><PaperPlane /></Button>
+              <Button onClick={handleSubmit}><Send /></Button>
             </div>
           )
         )}
