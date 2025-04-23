@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -133,7 +132,7 @@ const ChatBot = () => {
       </div>
 
       {/* Main Chat Area */}
-      <div className="flex-1 p-4">
+      <div className="flex-1 p-4 overflow-y-auto bg-chatbg">
         <div className="max-w-[672px] mx-auto space-y-4">
           {chatHistory.map((message, index) => {
             const opacity = Math.max(0.4, 1 - (chatHistory.length - 1 - index) * 0.15);
@@ -169,7 +168,7 @@ const ChatBot = () => {
                 <Button
                   key={option}
                   onClick={() => handleAnswer(option)}
-                  className="bg-[#091B1F] text-white hover:bg-[#091B1F]/90 transition-colors"
+                  className="flex-1 bg-[#091B1F] text-white hover:bg-[#091B1F]/90 transition-colors"
                   size="lg"
                 >
                   {option}
