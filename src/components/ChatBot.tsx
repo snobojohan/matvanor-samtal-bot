@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -134,26 +135,22 @@ const ChatBot = () => {
       {/* Main Chat Area */}
       <div className="flex-1 p-4 overflow-y-auto bg-chatbg">
         <div className="max-w-[672px] mx-auto space-y-4">
-          {chatHistory.map((message, index) => {
-            const opacity = Math.max(0.4, 1 - (chatHistory.length - 1 - index) * 0.15);
-            return (
+          {chatHistory.map((message, index) => (
+            <div
+              key={index}
+              className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
+            >
               <div
-                key={index}
-                className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
-                style={{ opacity }}
+                className={`rounded-lg p-3 max-w-[80%] ${
+                  message.type === 'user'
+                    ? 'bg-chatblue text-white'
+                    : 'bg-[#EFF0EF] text-chattext shadow-sm'
+                }`}
               >
-                <div
-                  className={`rounded-lg p-3 max-w-[80%] ${
-                    message.type === 'user'
-                      ? 'bg-chatblue text-white'
-                      : 'bg-white text-chattext shadow-sm'
-                  }`}
-                >
-                  {message.content}
-                </div>
+                {message.content}
               </div>
-            );
-          })}
+            </div>
+          ))}
           {isTyping && <TypingIndicator />}
           <div ref={chatEndRef} />
         </div>
