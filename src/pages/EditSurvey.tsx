@@ -7,12 +7,12 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import { surveyQuestions } from '@/data/surveyQuestions';
 import SurveyQuestionCard from '@/components/survey/SurveyQuestionCard';
-import { SurveyQuestion } from '@/types/survey';
+import { SurveyQuestion, SurveyData } from '@/types/survey';
 import QuestionFlow from '@/components/survey/QuestionFlow';
 import { supabase } from '@/integrations/supabase/client';
 
 const EditSurvey = () => {
-  const [questions, setQuestions] = useState(surveyQuestions);
+  const [questions, setQuestions] = useState<SurveyData>(surveyQuestions);
   const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const { toast } = useToast();
@@ -32,7 +32,8 @@ const EditSurvey = () => {
 
       if (error) throw error;
       if (data?.questions) {
-        setQuestions(data.questions);
+        // Cast the JSON data to the correct SurveyData type
+        setQuestions(data.questions as SurveyData);
       }
     } catch (error) {
       console.error('Error loading survey configuration:', error);
