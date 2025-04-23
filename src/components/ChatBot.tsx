@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -46,8 +47,12 @@ const ChatBot = () => {
       return;
     }
 
-    const nextQuestionKey = question.options 
-      ? question[`next_${answer.toLowerCase()}`] || question.next
+    // Create the key format for option-specific next question
+    const nextOptionKey = `next_${answer.toLowerCase()}`;
+    
+    // Check if there's a specific next question for this answer
+    const nextQuestionKey = question.options && question[nextOptionKey] 
+      ? question[nextOptionKey]
       : question.next;
 
     if (nextQuestionKey) {
