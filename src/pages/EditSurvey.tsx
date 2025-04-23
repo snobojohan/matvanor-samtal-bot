@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { surveyQuestions } from '@/data/surveyQuestions';
 import SurveyQuestionCard from '@/components/survey/SurveyQuestionCard';
 import { SurveyQuestion } from '@/types/survey';
+import QuestionFlow from '@/components/survey/QuestionFlow';
 
 const EditSurvey = () => {
   const [questions, setQuestions] = useState(surveyQuestions);
