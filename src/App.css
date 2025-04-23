@@ -5,6 +5,12 @@
   text-align: center;
 }
 
+.send-special {
+  position: relative;
+  top: 1px;
+  left: -1px;
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;
