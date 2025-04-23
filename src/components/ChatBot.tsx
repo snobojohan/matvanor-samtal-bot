@@ -1,6 +1,5 @@
-
 import React, { useState, useRef, useEffect } from 'react';
-import { QuestionMark, Send } from 'lucide-react';
+import { HelpCircle, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
@@ -38,7 +37,7 @@ const ChatBot = () => {
       const { error } = await supabase
         .from('survey_responses')
         .insert({
-          questionid: response.questionId,  // Changed from questionId to questionid
+          questionid: response.questionId,
           answer: response.answer,
           timestamp: response.timestamp
         });
@@ -63,7 +62,6 @@ const ChatBot = () => {
     };
     addResponse(response);
 
-    // Save to Supabase when a response is added
     saveResponseToSupabase(response);
 
     const question = surveyQuestions[currentQuestion];
@@ -134,7 +132,7 @@ const ChatBot = () => {
                 }`}
               >
                 {message.type === 'bot' && (
-                  <QuestionMark className="inline-block mr-2 h-4 w-4" />
+                  <HelpCircle className="inline-block mr-2 h-4 w-4" />
                 )}
                 {message.content}
               </div>
