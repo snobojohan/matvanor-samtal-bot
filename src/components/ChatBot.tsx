@@ -139,9 +139,6 @@ const ChatBot = () => {
                     : 'bg-gray-100 text-gray-800'
                 }`}
               >
-                {message.type === 'bot' && (
-                  <HelpCircle className="inline-block mr-2 h-4 w-4 text-gray-500" />
-                )}
                 {message.content}
               </div>
             </div>
