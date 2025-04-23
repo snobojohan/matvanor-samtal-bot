@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -6,6 +5,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
 import { surveyQuestions } from '@/data/surveyQuestions';
 import { useSurvey } from '@/context/SurveyContext';
+import { UserResponse } from '@/types/survey';
 
 const ChatBot = () => {
   const [currentQuestion, setCurrentQuestion] = useState('welcome');
