@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -37,7 +36,7 @@ const ChatBot = () => {
 
   useEffect(() => {
     scrollToBottom();
-  }, [chatHistory]);
+  }, [chatHistory, isTyping]);
 
   const saveResponseToSupabase = async (response: UserResponse) => {
     try {
@@ -134,7 +133,7 @@ const ChatBot = () => {
 
       {/* Main Chat Area */}
       <div className="flex-1 p-4 overflow-y-auto bg-chatbg">
-        <div className="max-w-[672px] mx-auto space-y-4">
+        <div className="max-w-[672px] mx-auto space-y-4 pb-20">
           {chatHistory.map((message, index) => (
             <div
               key={index}
@@ -151,7 +150,11 @@ const ChatBot = () => {
               </div>
             </div>
           ))}
-          {isTyping && <TypingIndicator />}
+          {isTyping && (
+            <div className="mb-4">
+              <TypingIndicator />
+            </div>
+          )}
           <div ref={chatEndRef} />
         </div>
       </div>
