@@ -125,49 +125,50 @@ const ChatBot = () => {
 
   return (
     <div className="flex flex-col h-screen bg-chatbg text-chattext">
-      {/* Sticky Header */}
-      <div className="sticky top-0 z-10 bg-chatbg/80 backdrop-blur-sm p-4">
-        <h1 className="text-xl font-semibold">Undersökning om matvanor</h1>
+      {/* Sticky Header with small fadeout */}
+      <div className="sticky top-0 z-10 bg-chatbg">
+        <div className="p-4">
+          <h1 className="text-xl font-semibold">Undersökning om matvanor</h1>
+        </div>
+        <div className="h-2 bg-gradient-to-b from-chatbg to-transparent" />
       </div>
 
-      {/* Scrollable Chat Area */}
-      <div className="flex-1 overflow-y-auto p-4">
-        <div className="max-w-2xl mx-auto space-y-4">
-          {chatHistory.map((message, index) => {
-            const opacity = Math.max(0.4, 1 - (chatHistory.length - 1 - index) * 0.15);
-            return (
+      {/* Main Chat Area */}
+      <div className="flex-1 p-4 space-y-4">
+        {chatHistory.map((message, index) => {
+          const opacity = Math.max(0.4, 1 - (chatHistory.length - 1 - index) * 0.15);
+          return (
+            <div
+              key={index}
+              className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
+              style={{ opacity }}
+            >
               <div
-                key={index}
-                className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
-                style={{ opacity }}
+                className={`rounded-lg p-3 max-w-[80%] ${
+                  message.type === 'user'
+                    ? 'bg-chatblue text-white'
+                    : 'bg-white text-chattext shadow-sm'
+                }`}
               >
-                <div
-                  className={`rounded-lg p-3 max-w-[80%] ${
-                    message.type === 'user'
-                      ? 'bg-chatblue text-white'
-                      : 'bg-white text-chattext shadow-sm'
-                  }`}
-                >
-                  {message.content}
-                </div>
+                {message.content}
               </div>
-            );
-          })}
-          {isTyping && <TypingIndicator />}
-          <div ref={chatEndRef} />
-        </div>
+            </div>
+          );
+        })}
+        {isTyping && <TypingIndicator />}
+        <div ref={chatEndRef} />
       </div>
 
       {/* Sticky Bottom Section */}
       <div className="sticky bottom-0 bg-chatbg/80 backdrop-blur-sm p-4">
         <div className="max-w-2xl mx-auto">
           {currentQuestionData?.options ? (
-            <div className="grid grid-cols-1 gap-2">
+            <div className="flex flex-wrap gap-2">
               {currentQuestionData.options.map((option) => (
                 <Button
                   key={option}
                   onClick={() => handleAnswer(option)}
-                  className="w-full bg-chatblue text-white hover:bg-chatblue/90 transition-colors"
+                  className="bg-chatblue text-white hover:bg-chatblue/90 transition-colors"
                   size="lg"
                 >
                   {option}
