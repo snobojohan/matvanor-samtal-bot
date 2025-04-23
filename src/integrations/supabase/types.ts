@@ -30,6 +30,30 @@ export type Database = {
         }
         Relationships: []
       }
+      survey_responses: {
+        Row: {
+          answer: string
+          created_at: string | null
+          id: string
+          questionid: string
+          timestamp: string
+        }
+        Insert: {
+          answer: string
+          created_at?: string | null
+          id?: string
+          questionid: string
+          timestamp: string
+        }
+        Update: {
+          answer?: string
+          created_at?: string | null
+          id?: string
+          questionid?: string
+          timestamp?: string
+        }
+        Relationships: []
+      }
       users: {
         Row: {
           avatar_url: string | null

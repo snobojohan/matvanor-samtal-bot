@@ -33,19 +33,23 @@ const ChatBot = () => {
     scrollToBottom();
   }, [chatHistory]);
 
-  const saveResponsesToSupabase = async (responses: UserResponse[]) => {
+  const saveResponseToSupabase = async (response: UserResponse) => {
     try {
       const { error } = await supabase
         .from('survey_responses')
-        .insert(responses);
+        .insert({
+          questionId: response.questionId,
+          answer: response.answer,
+          timestamp: response.timestamp
+        });
       
       if (error) {
-        console.error('Error saving responses to Supabase:', error);
+        console.error('Error saving response to Supabase:', error);
       } else {
-        console.log('Responses saved to Supabase successfully');
+        console.log('Response saved to Supabase successfully');
       }
     } catch (err) {
-      console.error('Failed to save responses:', err);
+      console.error('Failed to save response:', err);
     }
   };
 
@@ -60,7 +64,7 @@ const ChatBot = () => {
     addResponse(response);
 
     // Save to Supabase when a response is added
-    saveResponsesToSupabase([response]);
+    saveResponseToSupabase(response);
 
     const question = surveyQuestions[currentQuestion];
     if (question.end) {
