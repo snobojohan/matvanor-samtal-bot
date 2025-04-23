@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { SurveyQuestion } from '@/types/survey';
 import { Input } from '@/components/ui/input';
@@ -7,7 +6,9 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Button } from '@/components/ui/button';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, ArrowRight } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Card } from '@/components/ui/card';
 
 interface SurveyQuestionCardProps {
   questionId: string;
@@ -40,7 +41,6 @@ const SurveyQuestionCard: React.FC<SurveyQuestionCardProps> = ({
 
   const handleRemoveOption = (index: number) => {
     const newOptions = question.options?.filter((_, i) => i !== index);
-    // Remove corresponding next paths when removing an option
     const updatedQuestion = { ...question, options: newOptions };
     const optionKey = `next_${question.options?.[index]?.toLowerCase()}`;
     delete updatedQuestion[optionKey];
@@ -62,6 +62,37 @@ const SurveyQuestionCard: React.FC<SurveyQuestionCardProps> = ({
     } else {
       onUpdate({ ...question, type: undefined, options: [''] });
     }
+  };
+
+  const renderNextPath = (option: string = '', nextQuestionId: string = '') => {
+    const pathKey = option ? `next_${option.toLowerCase()}` : 'next';
+    const currentNext = question[pathKey] as string;
+
+    return (
+      <div className="flex items-center gap-2">
+        {option && (
+          <div className="flex items-center gap-2">
+            <ArrowRight className="h-4 w-4 text-gray-400" />
+            <span className="text-sm font-medium">{option}:</span>
+          </div>
+        )}
+        <Select
+          value={currentNext || ''}
+          onValueChange={(value) => handleNextPathChange(option, value)}
+        >
+          <SelectTrigger className="w-full max-w-[200px]">
+            <SelectValue placeholder="Select next question" />
+          </SelectTrigger>
+          <SelectContent>
+            {availableQuestions.map((qId) => (
+              <SelectItem key={qId} value={qId}>
+                {qId}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+    );
   };
 
   return (
@@ -102,34 +133,27 @@ const SurveyQuestionCard: React.FC<SurveyQuestionCardProps> = ({
         <div>
           <Label className="mb-2 block">Options</Label>
           {question.options.map((option, index) => (
-            <div key={index} className="flex items-center space-x-2 mt-2">
-              <Input
-                value={option}
-                onChange={(e) => handleOptionChange(index, e.target.value)}
-                placeholder={`Option ${index + 1}`}
-              />
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => handleRemoveOption(index)}
-                className="text-red-500 hover:text-red-700"
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
-              <div className="flex-1">
-                <select
-                  className="w-full p-2 border rounded"
-                  value={question[`next_${option.toLowerCase()}`] || ''}
-                  onChange={(e) => handleNextPathChange(option, e.target.value)}
+            <div key={index} className="space-y-2 mb-4">
+              <div className="flex items-center space-x-2">
+                <Input
+                  value={option}
+                  onChange={(e) => handleOptionChange(index, e.target.value)}
+                  placeholder={`Option ${index + 1}`}
+                />
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handleRemoveOption(index)}
+                  className="text-red-500 hover:text-red-700"
                 >
-                  <option value="">Select next question</option>
-                  {availableQuestions.map((qId) => (
-                    <option key={qId} value={qId}>
-                      {qId}
-                    </option>
-                  ))}
-                </select>
+                  <Trash2 className="h-4 w-4" />
+                </Button>
               </div>
+              {option && (
+                <Card className="p-2 bg-gray-50">
+                  {renderNextPath(option)}
+                </Card>
+              )}
             </div>
           ))}
           <Button
@@ -143,21 +167,10 @@ const SurveyQuestionCard: React.FC<SurveyQuestionCardProps> = ({
           </Button>
         </div>
       ) : (
-        <div>
+        <Card className="p-4 bg-gray-50">
           <Label>Next Question</Label>
-          <select
-            className="w-full p-2 border rounded mt-1"
-            value={question.next || ''}
-            onChange={(e) => handleNextPathChange('', e.target.value)}
-          >
-            <option value="">Select next question</option>
-            {availableQuestions.map((qId) => (
-              <option key={qId} value={qId}>
-                {qId}
-              </option>
-            ))}
-          </select>
-        </div>
+          {renderNextPath()}
+        </Card>
       )}
 
       <div className="flex items-center space-x-2">
