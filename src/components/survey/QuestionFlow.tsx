@@ -35,15 +35,39 @@ const QuestionFlow: React.FC<QuestionFlowProps> = ({
     newVisited.add(questionId);
 
     // Get all next paths with their corresponding options
-    const nextPaths = question.options 
-      ? question.options.map(option => {
-          const key = option.toLowerCase().replace(/[.,!?]/g, '').split(' ')[0];
-          const nextId = question[`next_${key}`] as string || question.next;
-          return { option, nextId };
-        })
-      : question.next 
-        ? [{ option: 'Next', nextId: question.next }] 
-        : [];
+    const nextPaths = [];
+    
+    // Add paths from options if they exist
+    if (question.options) {
+      question.options.forEach(option => {
+        const key = option.toLowerCase().replace(/[.,!?]/g, '').split(' ')[0];
+        const nextKey = `next_${key}`;
+        const nextId = question[nextKey] as string || question.next;
+        
+        if (nextId) {
+          nextPaths.push({ option, nextId });
+        }
+      });
+    } 
+    // If no options but has next, add default next
+    else if (question.next) {
+      nextPaths.push({ option: 'Next', nextId: question.next });
+    }
+    
+    // Add any additional next paths not covered by options
+    Object.entries(question).forEach(([key, value]) => {
+      if (key.startsWith('next_') && typeof value === 'string') {
+        // Check if this path is already covered by an option
+        const alreadyIncluded = nextPaths.some(path => path.nextId === value);
+        
+        if (!alreadyIncluded) {
+          nextPaths.push({ 
+            option: `${key.replace('next_', '')}`, 
+            nextId: value 
+          });
+        }
+      }
+    });
 
     return (
       <div key={`${questionId}-${level}`} className="relative">
