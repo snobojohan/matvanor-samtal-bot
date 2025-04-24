@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { SurveyData } from '@/types/survey';
+import { ChevronRight } from 'lucide-react';
 
 interface QuestionFlowProps {
   questions: SurveyData;
@@ -18,8 +19,11 @@ const QuestionFlow: React.FC<QuestionFlowProps> = ({
   const renderQuestionFlow = (questionId: string, level: number = 0, visited: Set<string> = new Set()) => {
     if (visited.has(questionId)) {
       return (
-        <div key={`${questionId}-${level}-loop`} className="my-2 ml-6 p-2 border border-amber-200 bg-amber-50 rounded-md">
-          <div className="text-amber-700 text-sm">Loop back to: {questionId}</div>
+        <div key={`${questionId}-${level}-loop`} className="ml-4 py-1">
+          <div className="text-amber-700 text-sm flex items-center gap-1">
+            <ChevronRight className="h-4 w-4" />
+            loops to: {questionId}
+          </div>
         </div>
       );
     }
@@ -33,29 +37,40 @@ const QuestionFlow: React.FC<QuestionFlowProps> = ({
     // Get all next paths
     const nextPaths = Object.entries(question)
       .filter(([key]) => key.startsWith('next'))
-      .map(([_, value]) => value as string);
+      .map(([key, value]) => ({
+        option: key.replace('next_', ''),
+        nextId: value as string
+      }));
 
     return (
-      <div key={`${questionId}-${level}`} className="mb-2">
+      <div key={`${questionId}-${level}`} className="relative">
         <div
-          className={`p-3 border rounded-md ${
+          className={`inline-flex items-center rounded px-2 py-1 text-sm cursor-pointer transition-colors ${
             selectedQuestion === questionId
-              ? 'border-[#2D9CDB] bg-[#2D9CDB]/10'
-              : 'border-gray-200 hover:bg-gray-50'
+              ? 'bg-[#2D9CDB] text-white'
+              : 'hover:bg-gray-100'
           }`}
           onClick={() => onSelectQuestion(questionId)}
         >
-          <div className="flex justify-between">
-            <span className="font-medium text-sm">{questionId}</span>
-            {question.end && (
-              <span className="px-2 py-0.5 text-xs rounded-full bg-red-100 text-red-800">End</span>
-            )}
-          </div>
+          <span className="font-medium">{questionId}</span>
+          {question.end && (
+            <span className="ml-2 px-1.5 py-0.5 text-xs rounded-full bg-red-100 text-red-800">
+              End
+            </span>
+          )}
         </div>
 
         {nextPaths.length > 0 && (
-          <div className="pl-6 border-l border-gray-300">
-            {nextPaths.map((nextId) => renderQuestionFlow(nextId, level + 1, newVisited))}
+          <div className="ml-8 mt-1 space-y-2 relative before:absolute before:left-[-12px] before:top-0 before:h-full before:w-[2px] before:bg-gray-200">
+            {nextPaths.map(({ option, nextId }, index) => (
+              <div key={`${questionId}-${nextId}-${index}`} className="relative">
+                <div className="absolute left-[-12px] top-3 h-[2px] w-3 bg-gray-200" />
+                <div className="pt-1">
+                  <span className="text-xs text-gray-500 block mb-1">{option}</span>
+                  {renderQuestionFlow(nextId, level + 1, newVisited)}
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>
