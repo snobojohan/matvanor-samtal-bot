@@ -23,6 +23,7 @@ const ChatInput = ({ value, onChange, onSubmit, options, isEnd, disabled }: Chat
           <Button
             key={option}
             onClick={() => {
+              // Call onSubmit directly with the option value
               onChange(option);
               onSubmit();
             }}

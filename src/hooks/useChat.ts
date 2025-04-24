@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useSurvey } from '@/context/SurveyContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -67,13 +66,16 @@ export const useChat = () => {
   };
 
   const handleAnswer = (answer: string) => {
+    const currentTimestamp = new Date().toISOString();
+    
     setChatHistory(prev => [...prev, { type: 'user', content: answer }]);
     
     const response: UserResponse = {
       questionId: currentQuestion,
       answer,
-      timestamp: new Date().toISOString(),
+      timestamp: currentTimestamp,
     };
+
     addResponse(response);
     saveResponseToSupabase(response);
 
@@ -88,18 +90,14 @@ export const useChat = () => {
     
     console.log('Processing answer:', {
       currentQuestion,
-      answer: lowerAnswer,
       nextKey,
       availableNextPaths: Object.keys(question).filter(key => key.startsWith('next'))
     });
     
-    let nextQuestionKey = question[nextKey] || question.next;
+    const nextQuestionKey = question[nextKey] || question.next;
 
     if (nextQuestionKey) {
-      console.log('Moving to next question:', nextQuestionKey);
-      setTimeout(() => {
-        setCurrentQuestion(nextQuestionKey as string);
-      }, 100);
+      setCurrentQuestion(nextQuestionKey as string);
     } else {
       console.error('No next question found');
     }
