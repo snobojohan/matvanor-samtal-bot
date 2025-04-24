@@ -72,6 +72,7 @@ const ChatBot = () => {
             onSubmit={handleSubmit}
             options={currentOptions}
             isEnd={isEndQuestion}
+            disabled={isLoading}
           />
         </div>
       </div>
