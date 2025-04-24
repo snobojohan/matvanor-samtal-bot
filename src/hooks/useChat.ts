@@ -73,6 +73,12 @@ export const useChat = () => {
     }
   };
 
+  const formatOptionKey = (text: string): string => {
+    return text.toLowerCase()
+      .replace(/[^a-z0-9]/g, '') // Remove all non-alphanumeric characters
+      .trim();
+  };
+
   const handleAnswer = useCallback((answer: string) => {
     if (isProcessing) return;
     setIsProcessing(true);
@@ -97,8 +103,8 @@ export const useChat = () => {
         return;
       }
 
-      const lowerAnswer = answer.toLowerCase();
-      const nextKey = `next_${lowerAnswer}`;
+      const formattedAnswer = formatOptionKey(answer);
+      const nextKey = `next_${formattedAnswer}`;
       
       console.log('Processing answer:', {
         currentQuestion,
