@@ -1,12 +1,11 @@
-
 import { SurveyData } from '@/types/survey';
 
 export const surveyQuestions: SurveyData = {
   welcome: {
     message: "Hej och välkommen till vår undersökning om matvanor! Vi är intresserade av att förstå hur du och din familj hanterar mat i vardagen. Dina svar hjälper oss att förstå verkliga utmaningar och behov. Undersökningen tar cirka 10-15 minuter. Vill du börja?",
-    options: ["Ja, jag vill delta", "Nej tack"],
-    next_ja: "intro",
-    next_nej: "early_exit"
+    options: ["Nej tack", "Ja, jag vill delta"],
+    next_nej_tack: "early_exit",
+    next_ja: "intro"
   },
   early_exit: {
     message: "Tack ändå! Om du har några frågor är du välkommen att kontakta oss.",
