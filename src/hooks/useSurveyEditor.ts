@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
@@ -7,13 +6,20 @@ import { SurveyData, SurveyQuestion } from '@/types/survey';
 
 export const useSurveyEditor = () => {
   const [questions, setQuestions] = useState<SurveyData>(surveyQuestions);
+  const [originalQuestions, setOriginalQuestions] = useState<SurveyData>(surveyQuestions);
   const [selectedQuestion, setSelectedQuestion] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
     loadActiveConfiguration();
   }, []);
+
+  useEffect(() => {
+    const hasChanges = JSON.stringify(questions) !== JSON.stringify(originalQuestions);
+    setHasUnsavedChanges(hasChanges);
+  }, [questions, originalQuestions]);
 
   const loadActiveConfiguration = async () => {
     try {
@@ -26,6 +32,7 @@ export const useSurveyEditor = () => {
       if (error) throw error;
       if (data?.questions) {
         setQuestions(data.questions as SurveyData);
+        setOriginalQuestions(data.questions as SurveyData);
       }
     } catch (error) {
       console.error('Error loading survey configuration:', error);
@@ -34,35 +41,6 @@ export const useSurveyEditor = () => {
         description: "Failed to load the survey configuration.",
         variant: "destructive",
       });
-    }
-  };
-
-  const saveConfiguration = async () => {
-    setIsSaving(true);
-    try {
-      const { error } = await supabase
-        .from('survey_configurations')
-        .update({ 
-          questions,
-          updated_at: new Date().toISOString()
-        })
-        .eq('is_active', true);
-
-      if (error) throw error;
-
-      toast({
-        title: "Success",
-        description: "Survey configuration saved successfully.",
-      });
-    } catch (error) {
-      console.error('Error saving survey configuration:', error);
-      toast({
-        title: "Error Saving Survey",
-        description: "Failed to save the survey configuration.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSaving(false);
     }
   };
 
@@ -115,10 +93,43 @@ export const useSurveyEditor = () => {
     }));
   };
 
+  const saveConfiguration = async () => {
+    setIsSaving(true);
+    try {
+      const { error } = await supabase
+        .from('survey_configurations')
+        .update({ 
+          questions,
+          updated_at: new Date().toISOString()
+        })
+        .eq('is_active', true);
+
+      if (error) throw error;
+
+      setOriginalQuestions(questions);
+      setHasUnsavedChanges(false);
+      
+      toast({
+        title: "Success",
+        description: "Survey configuration saved successfully.",
+      });
+    } catch (error) {
+      console.error('Error saving survey configuration:', error);
+      toast({
+        title: "Error Saving Survey",
+        description: "Failed to save the survey configuration.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   return {
     questions,
     selectedQuestion,
     isSaving,
+    hasUnsavedChanges,
     setSelectedQuestion,
     handleAddQuestion,
     handleQuestionIdChange,
