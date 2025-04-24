@@ -16,6 +16,7 @@ const ChatBot = () => {
     isTyping,
     isLoading,
     handleSubmit,
+    handleAnswer,
     questions
   } = useChat();
 

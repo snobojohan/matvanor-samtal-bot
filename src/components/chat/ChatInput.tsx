@@ -10,13 +10,13 @@ interface ChatInputProps {
   onSubmit: () => void;
   options?: string[];
   isEnd?: boolean;
-  disabled?: boolean; // Add the disabled prop
+  disabled?: boolean;
 }
 
 const ChatInput = ({ value, onChange, onSubmit, options, isEnd, disabled }: ChatInputProps) => {
   if (isEnd) return null;
 
-  if (options) {
+  if (options && options.length > 0) {
     return (
       <div className="flex flex-wrap gap-2">
         {options.map((option) => (

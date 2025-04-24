@@ -10,7 +10,7 @@ interface ChatMessage {
 }
 
 export const useChat = () => {
-  const [currentQuestion, setCurrentQuestion] = useState('welcome');
+  const [currentQuestion, setCurrentQuestion] = useState<string>('welcome');
   const [userInput, setUserInput] = useState('');
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const [sessionId] = useState(() => crypto.randomUUID());
@@ -25,6 +25,7 @@ export const useChat = () => {
 
   const loadActiveConfiguration = async () => {
     try {
+      setIsLoading(true);
       const { data, error } = await supabase
         .from('survey_configurations')
         .select('questions')
@@ -112,7 +113,7 @@ export const useChat = () => {
     if (nextQuestionKey) {
       console.log('Setting next question to:', nextQuestionKey);
       setTimeout(() => {
-        setCurrentQuestion(nextQuestionKey);
+        setCurrentQuestion(nextQuestionKey as string);
       }, 100);
     } else {
       console.error('No next question found!');
@@ -145,6 +146,6 @@ export const useChat = () => {
     isLoading,
     handleSubmit,
     handleAnswer,
-    questions, // Make sure to expose questions
+    questions,
   };
 };
