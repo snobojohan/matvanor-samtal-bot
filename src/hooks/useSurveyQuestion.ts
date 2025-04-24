@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { SurveyQuestion } from '@/types/survey';
 
@@ -34,6 +33,14 @@ export const useSurveyQuestion = ({
     onUpdate({ ...question, message: e.target.value });
   };
 
+  const handleTypeChange = (type: "text" | "options") => {
+    if (type === "text") {
+      onUpdate({ ...question, type: "text", options: undefined });
+    } else {
+      onUpdate({ ...question, type: undefined, options: [''] });
+    }
+  };
+
   const handleOptionChange = (index: number, value: string) => {
     if (!question.options) return;
     const newOptions = [...question.options];
@@ -59,14 +66,6 @@ export const useSurveyQuestion = ({
     onUpdate({ ...question, [nextKey]: nextQuestionId });
   };
 
-  const handleTypeChange = (type: "text" | "options") => {
-    if (type === "text") {
-      onUpdate({ ...question, type: "text", options: undefined });
-    } else {
-      onUpdate({ ...question, type: undefined, options: [''] });
-    }
-  };
-
   const getNextPath = (option: string) => {
     const nextKey = `next_${option.toLowerCase()}`;
     return question[nextKey] as string;
@@ -88,4 +87,3 @@ export const useSurveyQuestion = ({
     toggleEndQuestion,
   };
 };
-

@@ -37,7 +37,7 @@ const QuestionSettings = ({ questionId, hasOptions, onIdChange, onTypeChange }: 
         >
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="options" id="options" />
-            <Label htmlFor="options">Multiple Choice</Label>
+            <Label htmlFor="options">Single Choice</Label>
           </div>
           <div className="flex items-center space-x-2">
             <RadioGroupItem value="text" id="text" />
