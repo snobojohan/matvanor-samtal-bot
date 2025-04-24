@@ -10,9 +10,10 @@ interface ChatInputProps {
   onSubmit: () => void;
   options?: string[];
   isEnd?: boolean;
+  disabled?: boolean; // Add the disabled prop
 }
 
-const ChatInput = ({ value, onChange, onSubmit, options, isEnd }: ChatInputProps) => {
+const ChatInput = ({ value, onChange, onSubmit, options, isEnd, disabled }: ChatInputProps) => {
   if (isEnd) return null;
 
   if (options) {
@@ -27,6 +28,7 @@ const ChatInput = ({ value, onChange, onSubmit, options, isEnd }: ChatInputProps
             }}
             className="flex-1 bg-[#091B1F] text-white hover:bg-[#091B1F]/90 transition-colors"
             size="lg"
+            disabled={disabled}
           >
             {option}
           </Button>
@@ -48,10 +50,12 @@ const ChatInput = ({ value, onChange, onSubmit, options, isEnd }: ChatInputProps
             onSubmit();
           }
         }}
+        disabled={disabled}
       />
       <Button 
         onClick={onSubmit}
         className="absolute right-3 bottom-3 p-0 h-8 w-8 bg-[#091B1F] hover:bg-[#091B1F]/90 rounded-full"
+        disabled={disabled}
       >
         <Send className="h-4 w-4 text-white send-special" />
       </Button>

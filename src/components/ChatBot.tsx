@@ -16,6 +16,7 @@ const ChatBot = () => {
     isTyping,
     isLoading,
     handleSubmit,
+    questions
   } = useChat();
 
   const scrollToBottom = () => {
@@ -25,6 +26,12 @@ const ChatBot = () => {
   useEffect(() => {
     scrollToBottom();
   }, [chatHistory, isTyping]);
+
+  // Determine if we're at the end of the survey
+  const isEndQuestion = !isLoading && currentQuestion && questions?.[currentQuestion]?.end === true;
+  
+  // Get options for the current question if available
+  const currentOptions = !isLoading && currentQuestion && questions?.[currentQuestion]?.options;
 
   return (
     <div className="flex flex-col h-screen bg-chatbg text-chattext" style={{ backgroundColor: '#F5F6F4' }}>
@@ -63,9 +70,8 @@ const ChatBot = () => {
             value={userInput}
             onChange={setUserInput}
             onSubmit={handleSubmit}
-            options={!isLoading && currentQuestion ? useChat().questions?.[currentQuestion]?.options : undefined}
-            isEnd={!isLoading && currentQuestion ? useChat().questions?.[currentQuestion]?.end : false}
-            disabled={isLoading}
+            options={currentOptions}
+            isEnd={isEndQuestion}
           />
         </div>
       </div>

@@ -145,5 +145,6 @@ export const useChat = () => {
     isLoading,
     handleSubmit,
     handleAnswer,
+    questions, // Make sure to expose questions
   };
 };
