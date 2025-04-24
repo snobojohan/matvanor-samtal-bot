@@ -1,44 +1,20 @@
 
-import React, { useEffect } from 'react';
-import { Link, useBeforeUnload, useNavigate } from 'react-router-dom';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import { ArrowLeft, Save } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 interface EditSurveyHeaderProps {
   onSave: () => void;
   isSaving: boolean;
-  hasUnsavedChanges?: boolean;
+  hasUnsavedChanges: boolean;
 }
 
-const EditSurveyHeader = ({ onSave, isSaving, hasUnsavedChanges = false }: EditSurveyHeaderProps) => {
-  const navigate = useNavigate();
-
-  useBeforeUnload(
-    React.useCallback(
-      (event) => {
-        if (hasUnsavedChanges) {
-          event.preventDefault();
-          return (event.returnValue = 'You have unsaved changes. Are you sure you want to leave?');
-        }
-      },
-      [hasUnsavedChanges]
-    )
-  );
-
-  // Handle navigation attempts within the app
-  useEffect(() => {
-    const handleBeforeNavigate = (event: BeforeUnloadEvent) => {
-      if (hasUnsavedChanges) {
-        if (!window.confirm('You have unsaved changes. Are you sure you want to leave?')) {
-          event.preventDefault();
-        }
-      }
-    };
-
-    window.addEventListener('beforeunload', handleBeforeNavigate);
-    return () => window.removeEventListener('beforeunload', handleBeforeNavigate);
-  }, [hasUnsavedChanges]);
-
+const EditSurveyHeader = ({ 
+  onSave, 
+  isSaving, 
+  hasUnsavedChanges 
+}: EditSurveyHeaderProps) => {
   return (
     <div className="sticky top-0 z-10 bg-background border-b">
       <div className="flex items-center justify-between p-4">
@@ -51,7 +27,7 @@ const EditSurveyHeader = ({ onSave, isSaving, hasUnsavedChanges = false }: EditS
         </div>
         <Button 
           onClick={onSave} 
-          disabled={isSaving}
+          disabled={isSaving || !hasUnsavedChanges}
           className="flex items-center gap-2"
         >
           <Save className="h-4 w-4" />
