@@ -1,8 +1,9 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { useSurvey } from '@/context/SurveyContext';
 import { supabase } from '@/integrations/supabase/client';
 import { UserResponse, SurveyData } from '@/types/survey';
+import { LOCAL_QUESTIONS } from '@/constants/config';
+import { surveyQuestions } from '@/data/surveyQuestions';
 
 interface ChatMessage {
   type: 'bot' | 'user';
@@ -21,7 +22,12 @@ export const useChat = () => {
   const { addResponse } = useSurvey();
 
   useEffect(() => {
-    loadActiveConfiguration();
+    if (LOCAL_QUESTIONS) {
+      setQuestions(surveyQuestions);
+      setIsLoading(false);
+    } else {
+      loadActiveConfiguration();
+    }
   }, []);
 
   const loadActiveConfiguration = async () => {
@@ -67,37 +73,30 @@ export const useChat = () => {
     }
   };
 
-  // Memoizing the handleAnswer function to prevent recreation on each render
   const handleAnswer = useCallback((answer: string) => {
-    // Prevent processing if already handling a response
     if (isProcessing) return;
     setIsProcessing(true);
 
     try {
       const currentTimestamp = new Date().toISOString();
       
-      // Add user message to chat history
       setChatHistory(prev => [...prev, { type: 'user', content: answer }]);
       
-      // Create response object
       const response: UserResponse = {
         questionId: currentQuestion,
         answer,
         timestamp: currentTimestamp,
       };
 
-      // Add to survey context and save to database
       addResponse(response);
       saveResponseToSupabase(response);
 
-      // Check if we're at the end
       const question = questions[currentQuestion];
       if (!question || question.end) {
         setIsProcessing(false);
         return;
       }
 
-      // Convert answer to lowercase for matching (use full answer)
       const lowerAnswer = answer.toLowerCase();
       const nextKey = `next_${lowerAnswer}`;
       
@@ -115,14 +114,11 @@ export const useChat = () => {
         console.error('No next question found');
       }
     } finally {
-      // Reset processing state
       setIsProcessing(false);
-      // Clear input field
       setUserInput('');
     }
   }, [currentQuestion, questions, addResponse, isProcessing, sessionId]);
 
-  // Process bot responses when question changes
   useEffect(() => {
     if (currentQuestion && !isLoading && questions[currentQuestion]) {
       const question = questions[currentQuestion];
@@ -134,7 +130,6 @@ export const useChat = () => {
     }
   }, [currentQuestion, questions, isLoading]);
 
-  // Separate direct submit and option click handlers
   const handleSubmit = useCallback(() => {
     if (!userInput.trim() || isProcessing) return;
     handleAnswer(userInput);
