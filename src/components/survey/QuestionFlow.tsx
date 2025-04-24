@@ -34,13 +34,16 @@ const QuestionFlow: React.FC<QuestionFlowProps> = ({
     const newVisited = new Set(visited);
     newVisited.add(questionId);
 
-    // Get all next paths
-    const nextPaths = Object.entries(question)
-      .filter(([key]) => key.startsWith('next'))
-      .map(([key, value]) => ({
-        option: key.replace('next_', ''),
-        nextId: value as string
-      }));
+    // Get all next paths with their corresponding options
+    const nextPaths = question.options 
+      ? question.options.map(option => {
+          const key = option.toLowerCase().replace(/[.,!?]/g, '').split(' ')[0];
+          const nextId = question[`next_${key}`] as string || question.next;
+          return { option, nextId };
+        })
+      : question.next 
+        ? [{ option: 'Next', nextId: question.next }] 
+        : [];
 
     return (
       <div key={`${questionId}-${level}`} className="relative">
