@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+
+import { useState, useEffect, useCallback } from 'react';
 import { useSurvey } from '@/context/SurveyContext';
 import { supabase } from '@/integrations/supabase/client';
 import { UserResponse, SurveyData } from '@/types/survey';
@@ -16,6 +17,7 @@ export const useChat = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [questions, setQuestions] = useState<SurveyData>({});
   const [isLoading, setIsLoading] = useState(true);
+  const [isProcessing, setIsProcessing] = useState(false);
   const { addResponse } = useSurvey();
 
   useEffect(() => {
@@ -65,44 +67,62 @@ export const useChat = () => {
     }
   };
 
-  const handleAnswer = (answer: string) => {
-    const currentTimestamp = new Date().toISOString();
-    
-    setChatHistory(prev => [...prev, { type: 'user', content: answer }]);
-    
-    const response: UserResponse = {
-      questionId: currentQuestion,
-      answer,
-      timestamp: currentTimestamp,
-    };
+  // Memoizing the handleAnswer function to prevent recreation on each render
+  const handleAnswer = useCallback((answer: string) => {
+    // Prevent processing if already handling a response
+    if (isProcessing) return;
+    setIsProcessing(true);
 
-    addResponse(response);
-    saveResponseToSupabase(response);
+    try {
+      const currentTimestamp = new Date().toISOString();
+      
+      // Add user message to chat history
+      setChatHistory(prev => [...prev, { type: 'user', content: answer }]);
+      
+      // Create response object
+      const response: UserResponse = {
+        questionId: currentQuestion,
+        answer,
+        timestamp: currentTimestamp,
+      };
 
-    const question = questions[currentQuestion];
-    if (!question || question.end) {
-      return;
+      // Add to survey context and save to database
+      addResponse(response);
+      saveResponseToSupabase(response);
+
+      // Check if we're at the end
+      const question = questions[currentQuestion];
+      if (!question || question.end) {
+        setIsProcessing(false);
+        return;
+      }
+
+      // Convert answer to lowercase for matching (use full answer)
+      const lowerAnswer = answer.toLowerCase();
+      const nextKey = `next_${lowerAnswer}`;
+      
+      console.log('Processing answer:', {
+        currentQuestion,
+        nextKey,
+        availableNextPaths: Object.keys(question).filter(key => key.startsWith('next'))
+      });
+      
+      const nextQuestionKey = question[nextKey] || question.next;
+
+      if (nextQuestionKey) {
+        setCurrentQuestion(nextQuestionKey as string);
+      } else {
+        console.error('No next question found');
+      }
+    } finally {
+      // Reset processing state
+      setIsProcessing(false);
+      // Clear input field
+      setUserInput('');
     }
+  }, [currentQuestion, questions, addResponse, isProcessing, sessionId]);
 
-    // Convert answer to lowercase for matching
-    const lowerAnswer = answer.toLowerCase();
-    const nextKey = `next_${lowerAnswer}`;
-    
-    console.log('Processing answer:', {
-      currentQuestion,
-      nextKey,
-      availableNextPaths: Object.keys(question).filter(key => key.startsWith('next'))
-    });
-    
-    const nextQuestionKey = question[nextKey] || question.next;
-
-    if (nextQuestionKey) {
-      setCurrentQuestion(nextQuestionKey as string);
-    } else {
-      console.error('No next question found');
-    }
-  };
-
+  // Process bot responses when question changes
   useEffect(() => {
     if (currentQuestion && !isLoading && questions[currentQuestion]) {
       const question = questions[currentQuestion];
@@ -114,11 +134,16 @@ export const useChat = () => {
     }
   }, [currentQuestion, questions, isLoading]);
 
-  const handleSubmit = () => {
-    if (!userInput.trim()) return;
+  // Separate direct submit and option click handlers
+  const handleSubmit = useCallback(() => {
+    if (!userInput.trim() || isProcessing) return;
     handleAnswer(userInput);
-    setUserInput('');
-  };
+  }, [userInput, handleAnswer, isProcessing]);
+
+  const handleOptionClick = useCallback((option: string) => {
+    if (isProcessing) return;
+    handleAnswer(option);
+  }, [handleAnswer, isProcessing]);
 
   return {
     currentQuestion,
@@ -127,7 +152,9 @@ export const useChat = () => {
     chatHistory,
     isTyping,
     isLoading,
+    isProcessing,
     handleSubmit,
+    handleOptionClick,
     handleAnswer,
     questions,
   };

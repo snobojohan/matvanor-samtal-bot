@@ -15,8 +15,9 @@ const ChatBot = () => {
     chatHistory,
     isTyping,
     isLoading,
+    isProcessing,
     handleSubmit,
-    handleAnswer,
+    handleOptionClick,
     questions
   } = useChat();
 
@@ -71,9 +72,10 @@ const ChatBot = () => {
             value={userInput}
             onChange={setUserInput}
             onSubmit={handleSubmit}
+            onOptionClick={handleOptionClick}
             options={currentOptions}
             isEnd={isEndQuestion}
-            disabled={isLoading}
+            disabled={isLoading || isProcessing}
           />
         </div>
       </div>
