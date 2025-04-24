@@ -1,6 +1,5 @@
 
 import React, { useRef, useEffect } from 'react';
-import { surveyQuestions } from '@/data/surveyQuestions';
 import TypingIndicator from './TypingIndicator';
 import ChatHeader from './chat/ChatHeader';
 import ChatMessage from './chat/ChatMessage';
@@ -15,6 +14,7 @@ const ChatBot = () => {
     setUserInput,
     chatHistory,
     isTyping,
+    isLoading,
     handleSubmit,
   } = useChat();
 
@@ -26,8 +26,6 @@ const ChatBot = () => {
     scrollToBottom();
   }, [chatHistory, isTyping]);
 
-  const currentQuestionData = surveyQuestions[currentQuestion];
-
   return (
     <div className="flex flex-col h-screen bg-chatbg text-chattext" style={{ backgroundColor: '#F5F6F4' }}>
       <ChatHeader />
@@ -35,13 +33,24 @@ const ChatBot = () => {
       {/* Main Chat Area */}
       <div className="flex-1 p-4 overflow-y-auto bg-chatbg" style={{ backgroundColor: '#F5F6F4' }}>
         <div className="max-w-[672px] mx-auto space-y-4 pb-20">
-          {chatHistory.map((message, index) => (
-            <ChatMessage key={index} type={message.type} content={message.content} />
-          ))}
-          {isTyping && (
-            <div className="mb-4">
-              <TypingIndicator />
+          {isLoading ? (
+            <div className="flex items-center justify-center h-32">
+              <div className="text-center">
+                <TypingIndicator />
+                <p className="mt-2 text-sm text-gray-500">Laddar undersökningen...</p>
+              </div>
             </div>
+          ) : (
+            <>
+              {chatHistory.map((message, index) => (
+                <ChatMessage key={index} type={message.type} content={message.content} />
+              ))}
+              {isTyping && (
+                <div className="mb-4">
+                  <TypingIndicator />
+                </div>
+              )}
+            </>
           )}
           <div ref={chatEndRef} />
         </div>
@@ -54,8 +63,9 @@ const ChatBot = () => {
             value={userInput}
             onChange={setUserInput}
             onSubmit={handleSubmit}
-            options={currentQuestionData?.options}
-            isEnd={currentQuestionData?.end}
+            options={!isLoading && currentQuestion ? useChat().questions?.[currentQuestion]?.options : undefined}
+            isEnd={!isLoading && currentQuestion ? useChat().questions?.[currentQuestion]?.end : false}
+            disabled={isLoading}
           />
         </div>
       </div>

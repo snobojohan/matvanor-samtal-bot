@@ -1,9 +1,8 @@
 
 import { useState, useEffect } from 'react';
-import { surveyQuestions } from '@/data/surveyQuestions';
 import { useSurvey } from '@/context/SurveyContext';
 import { supabase } from '@/integrations/supabase/client';
-import { UserResponse } from '@/types/survey';
+import { UserResponse, SurveyData } from '@/types/survey';
 
 interface ChatMessage {
   type: 'bot' | 'user';
@@ -16,7 +15,34 @@ export const useChat = () => {
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const [sessionId] = useState(() => crypto.randomUUID());
   const [isTyping, setIsTyping] = useState(false);
+  const [questions, setQuestions] = useState<SurveyData>({});
+  const [isLoading, setIsLoading] = useState(true);
   const { addResponse } = useSurvey();
+
+  useEffect(() => {
+    loadActiveConfiguration();
+  }, []);
+
+  const loadActiveConfiguration = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('survey_configurations')
+        .select('questions')
+        .eq('is_active', true)
+        .maybeSingle();
+
+      if (error) throw error;
+      if (data?.questions) {
+        setQuestions(data.questions as SurveyData);
+      } else {
+        console.error('No active survey configuration found');
+      }
+    } catch (error) {
+      console.error('Error loading survey configuration:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const saveResponseToSupabase = async (response: UserResponse) => {
     try {
@@ -50,8 +76,8 @@ export const useChat = () => {
     addResponse(response);
     saveResponseToSupabase(response);
 
-    const question = surveyQuestions[currentQuestion];
-    if (question.end) {
+    const question = questions[currentQuestion];
+    if (!question || question.end) {
       return;
     }
 
@@ -94,17 +120,15 @@ export const useChat = () => {
   };
 
   useEffect(() => {
-    if (currentQuestion) {
-      const question = surveyQuestions[currentQuestion];
-      if (question) {
-        setIsTyping(true);
-        setTimeout(() => {
-          setChatHistory(prev => [...prev, { type: 'bot', content: question.message }]);
-          setIsTyping(false);
-        }, 700);
-      }
+    if (currentQuestion && !isLoading && questions[currentQuestion]) {
+      const question = questions[currentQuestion];
+      setIsTyping(true);
+      setTimeout(() => {
+        setChatHistory(prev => [...prev, { type: 'bot', content: question.message }]);
+        setIsTyping(false);
+      }, 700);
     }
-  }, [currentQuestion]);
+  }, [currentQuestion, questions, isLoading]);
 
   const handleSubmit = () => {
     if (!userInput.trim()) return;
@@ -118,6 +142,7 @@ export const useChat = () => {
     setUserInput,
     chatHistory,
     isTyping,
+    isLoading,
     handleSubmit,
     handleAnswer,
   };
