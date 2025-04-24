@@ -59,7 +59,7 @@ export const useChat = () => {
       if (error) {
         console.error('Error saving response to Supabase:', error);
       } else {
-        console.log('Response saved to Supabase successfully');
+        console.log('Response saved successfully');
       }
     } catch (err) {
       console.error('Failed to save response:', err);
@@ -82,41 +82,26 @@ export const useChat = () => {
       return;
     }
 
-    const simplifiedAnswer = answer.toLowerCase().replace(/[.,!?]/g, '').split(' ')[0];
+    // Convert answer to lowercase for matching
+    const lowerAnswer = answer.toLowerCase();
+    const nextKey = `next_${lowerAnswer}`;
     
-    console.log('Current question:', currentQuestion);
-    console.log('Original answer:', answer);
-    console.log('Simplified answer:', simplifiedAnswer);
+    console.log('Processing answer:', {
+      currentQuestion,
+      answer: lowerAnswer,
+      nextKey,
+      availableNextPaths: Object.keys(question).filter(key => key.startsWith('next'))
+    });
     
-    const possibleNextKeys = [
-      `next_${simplifiedAnswer}`,
-      `next_${answer.toLowerCase()}`,
-    ];
-    
-    console.log('Possible next keys:', possibleNextKeys);
-    console.log('Available next paths:', Object.keys(question).filter(key => key.startsWith('next')));
-    
-    let nextQuestionKey = null;
-    for (const key of possibleNextKeys) {
-      if (question[key]) {
-        nextQuestionKey = question[key];
-        console.log(`Found match with key: ${key} -> ${nextQuestionKey}`);
-        break;
-      }
-    }
-    
-    if (!nextQuestionKey && question.next) {
-      nextQuestionKey = question.next;
-      console.log('Using default next:', nextQuestionKey);
-    }
+    let nextQuestionKey = question[nextKey] || question.next;
 
     if (nextQuestionKey) {
-      console.log('Setting next question to:', nextQuestionKey);
+      console.log('Moving to next question:', nextQuestionKey);
       setTimeout(() => {
         setCurrentQuestion(nextQuestionKey as string);
       }, 100);
     } else {
-      console.error('No next question found!');
+      console.error('No next question found');
     }
   };
 
