@@ -30,7 +30,7 @@ export const surveyQuestions: SurveyData = {
   },
   education_level: {
     message: "Vilken är din högsta avslutade utbildning?",
-    options: ["Grundskola", "Gymnasium", "Högskola/Universitet", "Annan eftergymnasial utbildning"],
+    options: ["Grundskola", "Gymnasium", "Högskola/Universitet", "Annan utbildning"],
     next: "food_ideas"
   },
   food_ideas: {
