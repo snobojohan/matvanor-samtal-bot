@@ -3,27 +3,42 @@ import React from 'react';
 import { Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import MultipleChoiceInput from './MultipleChoiceInput';
 
 interface ChatInputProps {
   value: string;
   onChange: (value: string) => void;
   onSubmit: () => void;
-  onOptionClick: (option: string) => void; // New prop for direct option handling
+  onOptionClick: (option: string) => void;
   options?: string[];
   isEnd?: boolean;
   disabled?: boolean;
+  type?: string;
+  onMultipleChoice?: (selected: string[]) => void;
 }
 
 const ChatInput = ({ 
   value, 
   onChange, 
   onSubmit, 
-  onOptionClick, // New prop for direct option handling
+  onOptionClick,
   options, 
   isEnd, 
-  disabled 
+  disabled,
+  type,
+  onMultipleChoice
 }: ChatInputProps) => {
   if (isEnd) return null;
+
+  if (type === "multiple_choice" && options && onMultipleChoice) {
+    return (
+      <MultipleChoiceInput
+        options={options}
+        onSubmit={onMultipleChoice}
+        disabled={disabled}
+      />
+    );
+  }
 
   if (options && options.length > 0) {
     return (
@@ -31,7 +46,7 @@ const ChatInput = ({
         {options.map((option) => (
           <Button
             key={option}
-            onClick={() => onOptionClick(option)} // Direct handler without state updates
+            onClick={() => onOptionClick(option)}
             className="flex-1 bg-[#091B1F] text-white hover:bg-[#091B1F]/90 transition-colors"
             size="lg"
             disabled={disabled}

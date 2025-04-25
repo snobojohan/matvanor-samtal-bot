@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { useSurvey } from '@/context/SurveyContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -76,18 +75,14 @@ export const useChat = () => {
   };
 
   const formatOptionKey = (text: string): string => {
-    // Förbättrad formatering för att hantera specifika fall
-    // Först ta bort mellanslag i början och slutet
     const trimmed = text.trim().toLowerCase();
     
-    // Specialfall för kända svarsalternativ med problem
     if (trimmed === 'använder i nya rätter') {
       return 'anvanderinyaratter';
     }
     
-    // Normal formatering för andra alternativ
     return trimmed
-      .replace(/[^a-z0-9]/g, '') // Ta bort alla icke-alfanumeriska tecken
+      .replace(/[^a-z0-9]/g, '')
       .trim();
   };
 
@@ -127,14 +122,11 @@ export const useChat = () => {
         availableNextPaths: Object.keys(question).filter(key => key.startsWith('next'))
       });
       
-      // Prioritera specifika 'next_*' nycklar före den allmänna 'next'
       let nextQuestionKey: string | undefined;
       
-      // Kolla först om det finns en specifik nästa-sökväg för svaret
       if (question[nextKey]) {
         nextQuestionKey = question[nextKey] as string;
       } 
-      // Använd bara den allmänna nästa-sökvägen om ingen specifik hittades
       else if (question.next) {
         nextQuestionKey = question.next;
       }
@@ -158,6 +150,13 @@ export const useChat = () => {
     }
     setUserInput('');
   }, [currentQuestion, questions, addResponse, isProcessing, isAnswerAnimating]);
+
+  const handleMultipleChoice = useCallback((selectedOptions: string[]) => {
+    if (isProcessing || isAnswerAnimating) return;
+    
+    const answer = selectedOptions.join(", ");
+    handleAnswer(answer);
+  }, [handleAnswer, isProcessing, isAnswerAnimating]);
 
   useEffect(() => {
     if (currentQuestion && !isLoading && questions[currentQuestion]) {
@@ -193,5 +192,6 @@ export const useChat = () => {
     handleOptionClick,
     handleAnswer,
     questions,
+    handleMultipleChoice,
   };
 };
