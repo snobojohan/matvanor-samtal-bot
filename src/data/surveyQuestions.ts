@@ -1,7 +1,6 @@
 import { SurveyData } from '@/types/survey';
 
 export const surveyQuestions: SurveyData = {
-  /*
   welcome: {
     message: "Hej och välkommen till vår undersökning om matvanor! Vi är intresserade av att förstå hur du och din familj hanterar mat i vardagen. Dina svar hjälper oss att förstå verkliga utmaningar och behov. Undersökningen tar cirka 5-10 minuter. Vill du börja?",
     type: "single_choice",
@@ -68,7 +67,6 @@ export const surveyQuestions: SurveyData = {
     type: "text",
     next: "success_period"
   },
-  
   success_period: {
     message: "Berätta om någon särskild period ni lyckats extra bra med handling och matlagning. Vad var nyckel då om ni får gissa?",
     type: "text",
@@ -146,28 +144,26 @@ export const surveyQuestions: SurveyData = {
     next_jagharintegjortan: "diet_change_challenges",
     next: "important_aspects"
   },
-  */
-  welcome: {
-  // diet_change_challenges: {
+  diet_change_challenges: {
     message: "Vad var det som gjorde att det inte blev av eller att det inte höll i sig?",
     type: "text",
     next: "important_aspects"
   },
   important_aspects: {
-    message: "Är något av det här viktigt för dig just nu? Välj gärna flera",
+    message: "Är något av det här viktigt för dig just nu? Välj gärna flera alternativ.",
     type: "multiple_choice",
     options: [
       "Äta nyttigare",
-      "Minska matkostnader",
+      "Äta billigare",
       "Minska klimatpåverkan",
-      "Slippa vardagsstress",
+      "Minska stress",
       "Inget",
       "Annat"
     ],
     next: "inspiration_sources"
   },
   inspiration_sources: {
-    message: "Var hämtar ni matinspiration från? Klicka gärna i fler än ett alternativ.",
+    message: "Hur får ni matinspiration? Klicka gärna i fler än ett alternativ.",
     type: "multiple_choice",
     options: [
       "Receptböcker",
