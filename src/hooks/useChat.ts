@@ -138,7 +138,7 @@ export const useChat = () => {
           setCurrentQuestion(nextQuestionKey as string);
           setIsAnswerAnimating(false);
           setIsProcessing(false);
-        }, 1000);
+        }, 700);
       } else {
         console.error('No next question found');
         setIsAnswerAnimating(false);
@@ -166,7 +166,7 @@ export const useChat = () => {
       setTimeout(() => {
         setChatHistory(prev => [...prev, { type: 'bot', content: question.message }]);
         setIsTyping(false);
-      }, 1200); // Changed from 700 to 1200 milliseconds
+      }, 700); 
     }
   }, [currentQuestion, questions, isLoading]);
 
