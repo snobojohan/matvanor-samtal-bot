@@ -71,7 +71,7 @@ const ChatInput = ({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder="Skriv ditt svar här..."
-        className="pr-12 bg-white text-chattext rounded-2xl shadow-lg min-h-[56px] py-4"
+        className="pr-12 bg-white text-chattext rounded-2xl shadow-lg min-h-[56px] py-4 text-base"
         onKeyPress={handleKeyPress}
         disabled={disabled}
       />
