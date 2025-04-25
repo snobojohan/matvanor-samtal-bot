@@ -1,6 +1,7 @@
 import { SurveyData } from '@/types/survey';
 
 export const surveyQuestions: SurveyData = {
+  /*
   welcome: {
     message: "Hej och välkommen till vår undersökning om matvanor! Vi är intresserade av att förstå hur du och din familj hanterar mat i vardagen. Dina svar hjälper oss att förstå verkliga utmaningar och behov. Undersökningen tar cirka 5-10 minuter. Vill du börja?",
     type: "single_choice",
@@ -67,6 +68,7 @@ export const surveyQuestions: SurveyData = {
     type: "text",
     next: "success_period"
   },
+  */
   success_period: {
     message: "Berätta om någon särskild period ni lyckats extra bra med handling och matlagning. Vad var nyckel då om ni får gissa?",
     type: "text",
@@ -78,6 +80,12 @@ export const surveyQuestions: SurveyData = {
     options: ["Slänger", "Äter samma rätt igen", "Använder i nya rätter", "Varierar", "Annat"],
     next_anvanderinyaratter: "leftovers_reuse_frequency",
     next_varierar: "leftovers_reuse_frequency",
+    next: "leftovers_handling_explanation"
+  },
+  leftovers_reuse_frequency: {
+    message: "Hur ofta använder ni överbliven tillagad mat som ingrediens i nya maträtter?",
+    type: "single_choice",
+    options: ["Sällan (1-2 ggr/månad)", "Ibland (1-2 ggr/vecka)", "Ofta (3-5 ggr/vecka)", "Nästan dagligen"],
     next: "leftovers_handling_explanation"
   },
   leftovers_handling_explanation: {
