@@ -69,7 +69,8 @@ export const surveyQuestions: SurveyData = {
     next: "success_period"
   },
   */
-  success_period: {
+  welcome: {
+  // success_period: {
     message: "Berätta om någon särskild period ni lyckats extra bra med handling och matlagning. Vad var nyckel då om ni får gissa?",
     type: "text",
     next: "leftovers_disposition"
