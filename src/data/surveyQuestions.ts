@@ -92,7 +92,7 @@ export const surveyQuestions: SurveyData = {
     next: "tools_used"
   },
   tools_used: {
-    message: "Vilka tjänster, appar eller verktyg (papper och penna räknas) använder ni för att underlätta i vardagen?",
+    message: "Vilka tjänster, appar eller verktyg (digitala eller fysiska) använder ni för att underlätta i vardagen?",
     type: "text",
     next: "meal_kit_service"
   },
@@ -101,7 +101,7 @@ export const surveyQuestions: SurveyData = {
     type: "single_choice",
     options: ["Ja", "Nej"],
     next_ja: "meal_kit_experience",
-    next_nej: "meal_kit_not_used_reason"
+    next_nej: "diet_change_considered"
   },
   meal_kit_experience: {
     message: "Vad var det? Funkade det bra?",
@@ -112,9 +112,10 @@ export const surveyQuestions: SurveyData = {
     message: "Använder ni det fortfarande?",
     type: "single_choice",
     options: ["Ja", "Nej"],
-    next: "diet_change_considered"
+    next_nej: "meal_kit_churn",
+    next_ja: "diet_change_considered"
   },
-  meal_kit_not_used_reason: {
+  meal_kit_churn: {
     message: "Varför slutade ni använda det?",
     type: "text",
     next: "diet_change_considered"
