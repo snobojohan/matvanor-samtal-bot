@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect } from 'react';
 import TypingIndicator from './TypingIndicator';
 import ChatHeader from './chat/ChatHeader';
@@ -16,6 +15,7 @@ const ChatBot = () => {
     isTyping,
     isLoading,
     isProcessing,
+    isAnswerAnimating,
     handleSubmit,
     handleOptionClick,
     questions
@@ -34,6 +34,8 @@ const ChatBot = () => {
   
   // Get options for the current question if available
   const currentOptions = !isLoading && currentQuestion && questions?.[currentQuestion]?.options;
+
+  const isButtonsDisabled = isLoading || isProcessing || isAnswerAnimating;
 
   return (
     <div className="flex flex-col h-screen bg-chatbg text-chattext" style={{ backgroundColor: '#F5F6F4' }}>
@@ -73,9 +75,9 @@ const ChatBot = () => {
             onChange={setUserInput}
             onSubmit={handleSubmit}
             onOptionClick={handleOptionClick}
-            options={currentOptions}
-            isEnd={isEndQuestion}
-            disabled={isLoading || isProcessing}
+            options={currentQuestion && questions?.[currentQuestion]?.options}
+            isEnd={currentQuestion && questions?.[currentQuestion]?.end === true}
+            disabled={isButtonsDisabled}
           />
         </div>
       </div>

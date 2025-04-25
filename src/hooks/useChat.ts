@@ -19,6 +19,7 @@ export const useChat = () => {
   const [questions, setQuestions] = useState<SurveyData>({});
   const [isLoading, setIsLoading] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isAnswerAnimating, setIsAnswerAnimating] = useState(false);
   const { addResponse } = useSurvey();
 
   useEffect(() => {
@@ -80,12 +81,12 @@ export const useChat = () => {
   };
 
   const handleAnswer = useCallback((answer: string) => {
-    if (isProcessing) return;
+    if (isProcessing || isAnswerAnimating) return;
     setIsProcessing(true);
+    setIsAnswerAnimating(true);
 
     try {
       const currentTimestamp = new Date().toISOString();
-      
       setChatHistory(prev => [...prev, { type: 'user', content: answer }]);
       
       const response: UserResponse = {
@@ -100,6 +101,7 @@ export const useChat = () => {
       const question = questions[currentQuestion];
       if (!question || question.end) {
         setIsProcessing(false);
+        setIsAnswerAnimating(false);
         return;
       }
 
@@ -115,15 +117,23 @@ export const useChat = () => {
       const nextQuestionKey = question[nextKey] || question.next;
 
       if (nextQuestionKey) {
-        setCurrentQuestion(nextQuestionKey as string);
+        setTimeout(() => {
+          setCurrentQuestion(nextQuestionKey as string);
+          setIsAnswerAnimating(false);
+          setIsProcessing(false);
+        }, 1000);
       } else {
         console.error('No next question found');
+        setIsAnswerAnimating(false);
+        setIsProcessing(false);
       }
-    } finally {
+    } catch (error) {
+      console.error('Error processing answer:', error);
+      setIsAnswerAnimating(false);
       setIsProcessing(false);
-      setUserInput('');
     }
-  }, [currentQuestion, questions, addResponse, isProcessing, sessionId]);
+    setUserInput('');
+  }, [currentQuestion, questions, addResponse, isProcessing, isAnswerAnimating]);
 
   useEffect(() => {
     if (currentQuestion && !isLoading && questions[currentQuestion]) {
@@ -154,6 +164,7 @@ export const useChat = () => {
     isTyping,
     isLoading,
     isProcessing,
+    isAnswerAnimating,
     handleSubmit,
     handleOptionClick,
     handleAnswer,
