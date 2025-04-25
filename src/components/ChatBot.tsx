@@ -23,12 +23,17 @@ const ChatBot = () => {
     questions
   } = useChat();
 
+  // Only scroll to bottom when content changes, not on initial load
   const scrollToBottom = () => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (chatHistory.length > 0 || isTyping) {
+      chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   useEffect(() => {
-    scrollToBottom();
+    if (chatHistory.length > 0 || isTyping) {
+      scrollToBottom();
+    }
   }, [chatHistory, isTyping]);
 
   const isEndQuestion = !isLoading && currentQuestion && questions?.[currentQuestion]?.end === true;
@@ -39,7 +44,7 @@ const ChatBot = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-chatbg" style={{ backgroundColor: '#F5F6F4' }}>
-      <div className="w-full max-w-[672px] min-h-[400px] max-h-[900px] h-screen flex flex-col">
+      <div className="w-full max-w-[672px] min-h-[600px] max-h-[1000px] h-screen flex flex-col">
         <ChatHeader />
 
         <div className="flex-1 p-4 overflow-y-auto bg-chatbg" style={{ backgroundColor: '#F5F6F4' }}>
