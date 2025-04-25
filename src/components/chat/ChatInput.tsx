@@ -80,7 +80,9 @@ const ChatInput = ({
         className="absolute right-3 bottom-3 p-0 h-8 w-8 bg-[#091B1F] hover:bg-[#091B1F]/90 rounded-full"
         disabled={disabled || !value.trim()}
       >
-        <Send className="h-4 w-4 text-white send-special" />
+        <div className="send-special">
+          <Send className="h-4 w-4 text-white" />
+        </div>
       </Button>
     </div>
   );
