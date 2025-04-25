@@ -31,19 +31,28 @@ const MultipleChoiceInput = ({ options, onSubmit, disabled }: MultipleChoiceInpu
 
   return (
     <div className="space-y-4">
-      <div className="grid gap-4">
+      <div className="flex flex-wrap gap-2 justify-center">
         {options.map((option) => (
-          <div key={option} className="flex items-center space-x-2">
+          <div 
+            key={option} 
+            className="flex items-center"
+          >
             <Checkbox
               id={option}
               checked={selectedOptions.includes(option)}
               onCheckedChange={(checked) => handleCheckboxChange(checked as boolean, option)}
               disabled={disabled}
-              className="border-[#091B1F] data-[state=checked]:bg-[#091B1F] data-[state=checked]:text-white"
+              className="hidden" // Hide default checkbox
             />
             <Label
               htmlFor={option}
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              className={`
+                px-4 py-2 rounded-md text-sm font-medium cursor-pointer transition-colors
+                ${selectedOptions.includes(option) 
+                  ? 'bg-[#091B1F] text-white' 
+                  : 'bg-transparent border border-[#091B1F] text-[#091B1F] hover:bg-[#091B1F]/10'}
+                ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
+              `}
             >
               {option}
             </Label>
@@ -64,3 +73,4 @@ const MultipleChoiceInput = ({ options, onSubmit, disabled }: MultipleChoiceInpu
 };
 
 export default MultipleChoiceInput;
+
