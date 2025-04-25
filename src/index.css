@@ -99,3 +99,12 @@
     @apply bg-background text-foreground;
   }
 }
+
+.send-special {
+  position: relative;
+}
+
+.send-special svg {
+  position: relative;
+  left: -10px;
+}
