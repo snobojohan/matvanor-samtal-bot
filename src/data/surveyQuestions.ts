@@ -3,6 +3,7 @@ import { SurveyData } from '@/types/survey';
 export const surveyQuestions: SurveyData = {
   welcome: {
     message: "Hej och välkommen till vår undersökning om matvanor! Vi är intresserade av att förstå hur du och din familj hanterar mat i vardagen. Dina svar hjälper oss att förstå verkliga utmaningar och behov. Undersökningen tar cirka 5-10 minuter. Vill du börja?",
+    type: "single_choice",
     options: ["Ja, jag vill delta", "Nej tack"],
     next_jajagvilldelta: "intro",
     next_nejtack: "early_exit"
@@ -13,6 +14,7 @@ export const surveyQuestions: SurveyData = {
   },
   intro: {
     message: "Tack för att du deltar! Först skulle jag vilja veta lite om dig. Hur ser din familjesituation ut?",
+    type: "single_choice",
     options: ["Singelhushåll", "Sambo/gift utan barn", "Familj med barn", "Har barn vissa veckor", "Annat"],
     next_familjmedbarn: "teenagers_question",
     next_harbarnvissaveckor: "teenagers_question",
@@ -20,19 +22,23 @@ export const surveyQuestions: SurveyData = {
   },
   teenagers_question: {
     message: "Finns det tonåringar i hushållet?",
+    type: "single_choice",
     options: ["Ja", "Nej"],
     next: "living_location"
   },
   living_location: {
     message: "Var bor du?",
+    type: "single_choice",
     options: ["Landsbygd", "Mindre stad", "Storstad"],
     next: "education_level"
   },
   education_level: {
     message: "Vilken är din högsta avslutade utbildning?",
+    type: "single_choice",
     options: ["Grundskola", "Gymnasium", "Högskola/Universitet", "Annan utbildning"],
     next: "difficult_food_day"
   },
+
   difficult_food_day: {
     message: "Berätta om en dag det var svårt att komma på vad ni skulle äta.",
     type: "text",
@@ -40,8 +46,8 @@ export const surveyQuestions: SurveyData = {
   },
   meal_planning_frequency: {
     message: "Hur brukar ni planera era måltider?",
-    options: ["Planerar inte", "Dag för dag", "Veckovis", "Månadsvis", "Annat"],
     type: "single_choice",
+    options: ["Planerar inte", "Dag för dag", "Veckovis", "Månadsvis", "Annat"],
     next_planerarinte: "shopping_process",
     next_annat: "meal_planning_last_week",
     next: "ease_wishes"
@@ -68,16 +74,16 @@ export const surveyQuestions: SurveyData = {
   },
   leftovers_disposition: {
     message: "När det finns matrester hemma, vad är mest troligt att ni gör med dem?",
-    options: ["Slänger", "Äter samma rätt igen", "Använder i nya rätter", "Varierar", "Annat"],
     type: "single_choice",
+    options: ["Slänger", "Äter samma rätt igen", "Använder i nya rätter", "Varierar", "Annat"],
     next_anvanderinyaratter: "leftovers_reuse_frequency",
     next_varierar: "leftovers_reuse_frequency",
     next: "leftovers_handling_explanation"
   },
   leftovers_reuse_frequency: {
     message: "Hur ofta använder ni överbliven tillagad mat som ingrediens i nya maträtter?",
-    options: ["Sällan (1-2 ggr/månad)", "Ibland (1-2 ggr/vecka)", "Ofta (3-5 ggr/vecka)", "Nästan dagligen"],
     type: "single_choice",
+    options: ["Sällan (1-2 ggr/månad)", "Ibland (1-2 ggr/vecka)", "Ofta (3-5 ggr/vecka)", "Nästan dagligen"],
     next: "leftovers_handling_explanation"
   },
   leftovers_handling_explanation: {
@@ -92,8 +98,8 @@ export const surveyQuestions: SurveyData = {
   },
   meal_kit_service: {
     message: "Har ni testat matkassar eller någon annan betald tjänst för att underlätta matplanering eller matlagning?",
-    options: ["Ja", "Nej"],
     type: "single_choice",
+    options: ["Ja", "Nej"],
     next_ja: "meal_kit_experience",
     next_nej: "meal_kit_not_used_reason"
   },
@@ -104,8 +110,8 @@ export const surveyQuestions: SurveyData = {
   },
   meal_kit_still_using: {
     message: "Använder ni det fortfarande?",
-    options: ["Ja", "Nej"],
     type: "single_choice",
+    options: ["Ja", "Nej"],
     next: "diet_change_considered"
   },
   meal_kit_not_used_reason: {
@@ -115,8 +121,8 @@ export const surveyQuestions: SurveyData = {
   },
   diet_change_considered: {
     message: "Har ni funderat på att förändra hur ni äter den senaste tiden?",
-    options: ["Ja", "Nej"],
     type: "single_choice",
+    options: ["Ja", "Nej"],
     next_ja: "diet_change_goals",
     next: "important_aspects"
   },
@@ -127,12 +133,12 @@ export const surveyQuestions: SurveyData = {
   },
   diet_change_progress: {
     message: "Hur har det gått hittills?",
+    type: "single_choice",
     options: [
       "Jag har gjort en förändring och håller i den",
       "Jag försökte men det höll inte",
       "Jag har inte gjort någon förändring än"
     ],
-    type: "single_choice",
     next_jagforsoktemendethallinte: "diet_change_challenges",
     next_jagharintegjortan: "diet_change_challenges",
     next: "important_aspects"
@@ -144,6 +150,7 @@ export const surveyQuestions: SurveyData = {
   },
   important_aspects: {
     message: "Är något av det här viktigt för dig just nu? Välj gärna flera",
+    type: "multiple_choice",
     options: [
       "Äta nyttigare",
       "Minska matkostnader",
@@ -152,10 +159,8 @@ export const surveyQuestions: SurveyData = {
       "Inget",
       "Annat"
     ],
-    type: "multiple_choice",
     next: "missed_questions"
   },
-
   missed_questions: {
     message: "Är det något du tycker att vi glömt att fråga om?",
     type: "text",
