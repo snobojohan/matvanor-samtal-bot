@@ -106,5 +106,6 @@
 
 .send-special svg {
   position: relative;
-  left: -10px;
+  top: 1px;
+  left: -1px;
 }
