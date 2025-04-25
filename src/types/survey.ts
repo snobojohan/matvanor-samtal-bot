@@ -1,8 +1,10 @@
 
+export type QuestionType = "text" | "single_choice" | "multiple_choice";
+
 export type SurveyQuestion = {
   message: string;
   options?: string[];
-  type?: "text";
+  type?: QuestionType;
   next?: string;
   end?: boolean;
   [key: string]: any;
