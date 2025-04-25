@@ -68,9 +68,8 @@ export const surveyQuestions: SurveyData = {
     type: "text",
     next: "success_period"
   },
-  */
-  welcome: {
-  // success_period: {
+  
+  success_period: {
     message: "Berätta om någon särskild period ni lyckats extra bra med handling och matlagning. Vad var nyckel då om ni får gissa?",
     type: "text",
     next: "leftovers_disposition"
@@ -131,7 +130,7 @@ export const surveyQuestions: SurveyData = {
     next: "important_aspects"
   },
   diet_change_goals: {
-    message: "Vad handlade det om, vad har ni för mål?",
+    message: "Vad handlar det om, vad har ni för mål?",
     type: "text",
     next: "diet_change_progress"
   },
@@ -147,7 +146,9 @@ export const surveyQuestions: SurveyData = {
     next_jagharintegjortan: "diet_change_challenges",
     next: "important_aspects"
   },
-  diet_change_challenges: {
+  */
+  welcome: {
+  // diet_change_challenges: {
     message: "Vad var det som gjorde att det inte blev av eller att det inte höll i sig?",
     type: "text",
     next: "important_aspects"
