@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback } from 'react';
 import { useSurvey } from '@/context/SurveyContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -165,7 +166,7 @@ export const useChat = () => {
       setTimeout(() => {
         setChatHistory(prev => [...prev, { type: 'bot', content: question.message }]);
         setIsTyping(false);
-      }, 700);
+      }, 1200); // Changed from 700 to 1200 milliseconds
     }
   }, [currentQuestion, questions, isLoading]);
 
