@@ -77,8 +77,7 @@ export const surveyQuestions: SurveyData = {
     type: "single_choice",
     options: ["Slänger", "Äter samma rätt igen", "Använder i nya rätter", "Varierar", "Annat"],
     next_anvanderinyaratter: "leftovers_reuse_frequency",
-    next_varierar: "leftovers_reuse_frequency",
-    next: "leftovers_handling_explanation"
+    next_varierar: "leftovers_reuse_frequency"
   },
   leftovers_reuse_frequency: {
     message: "Hur ofta använder ni överbliven tillagad mat som ingrediens i nya maträtter?",
@@ -158,6 +157,20 @@ export const surveyQuestions: SurveyData = {
       "Minska klimatpåverkan",
       "Slippa vardagsstress",
       "Inget",
+      "Annat"
+    ],
+    next: "inspiration_sources"
+  },
+  inspiration_sources: {
+    message: "Var hämtar ni matinspiration från? Klicka gärna i fler än ett alternativ.",
+    type: "multiple_choice",
+    options: [
+      "Receptböcker",
+      "Matbloggar",
+      "Sociala medier",
+      "Receptsajter online",
+      "TV-program",
+      "Vänner och familj",
       "Annat"
     ],
     next: "missed_questions"
