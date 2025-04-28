@@ -49,7 +49,7 @@ const Visualization = () => {
     });
     
     return (
-      <div key={`${questionId}-${level}`} className="mb-2">
+      <div key={`${questionId}-${level}`} className="mb-2 bg-chatbg">
         <div 
           className={`p-3 border rounded-md cursor-pointer transition-colors ${
             selectedQuestion === questionId 
