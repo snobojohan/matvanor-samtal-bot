@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
@@ -31,18 +30,19 @@ const MultipleChoiceInput = ({ options, onSubmit, disabled }: MultipleChoiceInpu
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap gap-2 justify-center">
+      <div className="flex flex-wrap gap-2 items-stretch">
         {options.map((option) => (
           <div 
             key={option} 
-            className="flex items-center"
+            className="flex flex-col flex-1 min-w-[200px]"
           >
             <div 
               className={`
-                flex items-center px-4 py-2 rounded-md text-sm font-medium cursor-pointer transition-colors border
-                ${selectedOptions.includes(option) 
-                  ? 'bg-[#091B1F] text-white border-[#091B1F]' 
-                  : 'bg-transparent border-[#091B1F] text-[#091B1F] hover:bg-[#091B1F]/10'}
+                flex-1 flex items-center px-4 py-2 rounded-md text-sm font-medium
+                cursor-pointer transition-colors border w-full
+                ${selectedOptions.includes(option)
+                  ? 'bg-[#091B1F] text-white border-[#091B1F]'
+                  : 'bg-[#091B1F] text-white border-[#091B1F] hover:bg-[#091B1F]/90'}
                 ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
               `}
             >

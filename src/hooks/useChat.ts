@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { useSurvey } from '@/context/SurveyContext';
 import { UserResponse, SurveyData } from '@/types/survey';
@@ -61,11 +60,18 @@ export const useChat = () => {
       const nextQuestionKey = determineNextQuestion(currentQuestion, answer, questions, responses);
       
       if (nextQuestionKey) {
+
+        // First show the user's answer and disable inputs
+        setIsAnswerAnimating(true);
+        setIsTyping(true);
+        
+        // Wait 700ms before showing the next question and its alternatives
         setTimeout(() => {
           setCurrentQuestion(nextQuestionKey);
           setIsAnswerAnimating(false);
           setIsProcessing(false);
-        }, 700);
+          setIsTyping(false);
+        }, 1000);
       } else {
         console.error('No next question found');
         setIsAnswerAnimating(false);
@@ -89,11 +95,8 @@ export const useChat = () => {
   useEffect(() => {
     if (currentQuestion && !isLoading && questions[currentQuestion]) {
       const question = questions[currentQuestion];
-      setIsTyping(true);
-      setTimeout(() => {
-        setChatHistory(prev => [...prev, { type: 'bot', content: question.message }]);
-        setIsTyping(false);
-      }, 700); 
+      // Show the question and its alternatives immediately
+      setChatHistory(prev => [...prev, { type: 'bot', content: question.message }]);
     }
   }, [currentQuestion, questions, isLoading]);
 

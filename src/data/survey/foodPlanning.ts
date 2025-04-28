@@ -37,10 +37,10 @@ export const foodPlanningQuestions: SurveyData = {
     message: "Hur brukar ni få idéer och inspiration till middagar? Klicka gärna i fler än ett alternativ.",
     type: "multiple_choice",
     options: [
-      "Jag söker aktivt recept eller tips (bok, blogg, sociala medier osv)",
-      "Jag brukar laga sånt jag redan kan och tänker ut själv",
-      "Jag frågar andra (familj, vänner)",
-      "Jag bestämmer spontant i butiken",
+      "Söker aktivt recept eller tips",
+      "Lagar sånt jag redan kan",
+      "Frågar andra",
+      "Bestämmer spontant i butiken",
       "Annat"
     ],
     next: "responsibility_distribution"

@@ -43,7 +43,7 @@ const ChatBot = () => {
   const isButtonsDisabled = isLoading || isProcessing || isAnswerAnimating;
 
   return (
-    <div className="min-h-screen h-full bg-chatbg flex items-center justify-center">
+    <div className="min-h-screen flex items-center justify-center">
       <div className="w-full max-w-[672px] min-h-[600px] max-h-[1000px] h-screen flex flex-col">
         <ChatHeader />
         <div className="flex-1 p-4">
