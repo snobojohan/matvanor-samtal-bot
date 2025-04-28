@@ -21,7 +21,7 @@ export const foodPlanningQuestions: SurveyData = {
     next_vi_planerar_en_vecka_i_taget: "meal_planning_last",
     next_vi_planerar_langre_an_en_vecka_i_taget: "meal_planning_last",
     next_vi_hittar_pa_samma_dag: "shopping_process",
-    next_vi_planerar_inte_alls: "shopping_process"
+    next_viplanerarintealls: "shopping_process"
   },
   meal_planning_last: {
     message: "Berätta om er senaste måltidsplanering.",
