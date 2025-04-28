@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
@@ -21,6 +22,11 @@ const MultipleChoiceInput = ({ options, onSubmit, disabled }: MultipleChoiceInpu
     );
   };
 
+  const handleOptionClick = (option: string) => {
+    const isSelected = selectedOptions.includes(option);
+    handleCheckboxChange(!isSelected, option);
+  };
+
   const handleSubmit = () => {
     if (selectedOptions.length > 0) {
       onSubmit(selectedOptions);
@@ -35,6 +41,7 @@ const MultipleChoiceInput = ({ options, onSubmit, disabled }: MultipleChoiceInpu
           <div 
             key={option} 
             className="flex flex-col flex-1 min-w-[200px]"
+            onClick={() => !disabled && handleOptionClick(option)}
           >
             <div 
               className={`
@@ -52,10 +59,12 @@ const MultipleChoiceInput = ({ options, onSubmit, disabled }: MultipleChoiceInpu
                 onCheckedChange={(checked) => handleCheckboxChange(checked as boolean, option)}
                 disabled={disabled}
                 className="mr-2 border-current"
+                onClick={(e) => e.stopPropagation()} // Prevent double triggering when clicking the checkbox directly
               />
               <Label
                 htmlFor={option}
-                className="cursor-pointer"
+                className="cursor-pointer flex-1"
+                onClick={(e) => e.stopPropagation()} // Prevent double triggering when clicking the label directly
               >
                 {option}
               </Label>
