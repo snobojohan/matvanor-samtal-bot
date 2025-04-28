@@ -80,17 +80,28 @@ export const useChat = () => {
     
     console.log(`Formatting option key: "${text}"`);
     
-    // Handle specific cases that caused issues
-    if (text.trim().toLowerCase() === 'vi planerar inte alls') {
+    // First trim the text to avoid trailing spaces
+    const trimmedText = text.trim().toLowerCase();
+    
+    // Special case handling for known problematic strings
+    if (trimmedText === 'ja, jag vill delta') {
+      return 'ja_jag_vill_delta';
+    }
+    
+    if (trimmedText === 'nej tack') {
+      return 'nej_tack';
+    }
+    
+    if (trimmedText === 'vi planerar inte alls') {
       return 'vi_planerar_inte_alls';
     }
     
-    if (text.trim().toLowerCase() === 'använder i nya rätter') {
+    if (trimmedText === 'använder i nya rätter') {
       return 'anvander_i_nya_ratter';
     }
     
     // Replace Swedish characters with their latin equivalents
-    const withoutSwedishChars = text.toLowerCase()
+    const withoutSwedishChars = trimmedText
       .replace(/å/g, 'a')
       .replace(/ä/g, 'a')
       .replace(/ö/g, 'o');

@@ -6,8 +6,8 @@ export const demographicQuestions: SurveyData = {
     message: "Tack för att du deltar! Först skulle jag vilja veta lite om dig. Hur ser din familjesituation ut?",
     type: "single_choice",
     options: ["Singelhushåll", "Sambo/gift utan barn", "Familj med barn", "Har barn vissa veckor", "Annat"],
-    next_familjmedbarn: "teenagers_question",
-    next_harbarnvissaveckor: "teenagers_question",
+    next_familj_med_barn: "teenagers_question",
+    next_har_barn_vissa_veckor: "teenagers_question",
     next: "living_location",
     skipToIf: [
       { question: "intro", equals: "singelhushall", to: "ease_wishes" }
