@@ -4,7 +4,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Card } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
-import { FileJson, FileCsv } from 'lucide-react';
+import { FileJson, FileSpreadsheet } from 'lucide-react';
 import { surveyQuestions } from '@/data/survey';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
@@ -169,7 +169,7 @@ const Rslts = () => {
             disabled={loading || responses.length === 0}
             className="flex items-center gap-2"
           >
-            <FileCsv />
+            <FileSpreadsheet />
             Download CSV
           </Button>
         </div>
