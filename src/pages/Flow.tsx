@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { surveyQuestions } from '@/data/surveyQuestions';
+import { surveyQuestions } from '@/data/survey'; // Updated import path
 import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 

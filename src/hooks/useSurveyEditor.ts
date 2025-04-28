@@ -1,7 +1,8 @@
+
 import { useState, useEffect } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { surveyQuestions } from '@/data/surveyQuestions';
+import { surveyQuestions } from '@/data/survey'; // Updated import path
 import { SurveyData, SurveyQuestion } from '@/types/survey';
 
 export const useSurveyEditor = () => {
