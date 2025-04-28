@@ -43,11 +43,10 @@ const ChatBot = () => {
   const isButtonsDisabled = isLoading || isProcessing || isAnswerAnimating;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-chatbg" style={{ backgroundColor: '#F5F6F4' }}>
+    <div className="min-h-screen flex items-center justify-center bg-chatbg">
       <div className="w-full max-w-[672px] min-h-[600px] max-h-[1000px] h-screen flex flex-col">
         <ChatHeader />
-
-        <div className="flex-1 p-4 overflow-y-auto bg-chatbg" style={{ backgroundColor: '#F5F6F4' }}>
+        <div className="flex-1 p-4">
           <div className="space-y-4 pb-20">
             {isLoading ? (
               <div className="flex items-center justify-center h-32">
@@ -72,7 +71,7 @@ const ChatBot = () => {
           </div>
         </div>
 
-        <div className="sticky bottom-0 bg-chatbg/80 backdrop-blur-sm p-4" style={{ backgroundColor: 'rgba(245, 246, 244, 0.8)' }}>
+        <div className="sticky bottom-0 bg-chatbg/80 backdrop-blur-sm p-4">
           <ChatInput
             value={userInput}
             onChange={setUserInput}
