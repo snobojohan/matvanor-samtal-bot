@@ -15,7 +15,7 @@ export const mealServiceQuestions: SurveyData = {
     next: "diet_change_considered"
   },
   meal_kit_regular_use: {
-    message: "Vilken tjänst använder ni mest och hur underlättar den erat liv?",
+    message: "Vilken tjänst använder ni mest, vad är fördelarna och finns det några nackdelar?",
     type: "text",
     next: "diet_change_considered"
   },

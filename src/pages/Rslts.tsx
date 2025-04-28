@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Card } from '@/components/ui/card';
@@ -11,7 +10,7 @@ import { toast } from '@/hooks/use-toast';
 
 interface SurveyResponse {
   session_id: string;
-  [key: string]: any;
+  [key: string]: string | undefined;
 }
 
 const Rslts = () => {
@@ -50,9 +49,9 @@ const Rslts = () => {
           const responsesArray = Object.values(groupedResponses);
           setResponses(responsesArray);
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error('Error fetching responses:', err);
-        setError(err.message);
+        setError(err instanceof Error ? err.message : 'An unknown error occurred');
       } finally {
         setLoading(false);
       }
@@ -185,9 +184,8 @@ const Rslts = () => {
       )}
       
       {!loading && !error && responses.length > 0 && (
-        <Card className="overflow-hidden">
-          <ScrollArea className="h-[calc(100vh-200px)] w-full">
-            <div className="overflow-x-auto">
+        
+            <div>
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -218,8 +216,6 @@ const Rslts = () => {
                 </TableBody>
               </Table>
             </div>
-          </ScrollArea>
-        </Card>
       )}
     </div>
   );

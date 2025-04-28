@@ -4,7 +4,7 @@ import { SurveyData } from '@/types/survey';
 export const leftoverQuestions: SurveyData = {
   leftovers_disposition: {
     message: "När det finns matrester hemma, vad är mest troligt att ni gör med dem?",
-    type: "single_choice",
+    type: "multiple_choice",
     options: ["Slänger", "Äter samma rätt igen", "Använder i nya rätter", "Varierar", "Annat"],
     next_anvander_i_nya_ratter: "leftovers_reuse_frequency",
     next_varierar: "leftovers_reuse_frequency",
@@ -16,8 +16,8 @@ export const leftoverQuestions: SurveyData = {
     options: [
       "Sällan (1-2 ggr/månad)",
       "Ibland (1-2 ggr/vecka)",
-      "Ofta (3-5 ggr/vecka)",
-      "Nästan dagligen"
+      "Ofta (3-7 ggr/vecka)",
+      "Aldrig"
     ],
     next: "recent_leftover_use"
   },

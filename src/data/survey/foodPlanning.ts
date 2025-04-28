@@ -8,20 +8,18 @@ export const foodPlanningQuestions: SurveyData = {
     next: "decision_process"
   },
   decision_process: {
-    message: "Hur brukar ni göra när ni bestämmer vad ni ska äta?",
+    message: "Hur brukar ni göra för att bestämma vad ni ska äta?",
     type: "single_choice",
     options: [
       "Vi hittar på samma dag",
-      "Vi planerar några dagar i taget",
-      "Vi planerar en vecka i taget",
-      "Vi planerar längre än en vecka i taget",
-      "Vi planerar inte alls"
+      "Vi planerar ca en vecka i taget",
+      "Vi planerar för längre än en vecka",
+      "Vi försöker planera men lyckas sällan"
     ],
     next_vi_hittar_pa_samma_dag: "shopping_process",
-    next_vi_planerar_nagra_dagar_i_taget: "meal_planning_last",
-    next_vi_planerar_en_vecka_i_taget: "meal_planning_last",
-    next_vi_planerar_langre_an_en_vecka_i_taget: "meal_planning_last",
-    next_vi_planerar_inte_alls: "shopping_process"
+    next_vi_planerar_ca_en_vecka_i_taget: "meal_planning_last",
+    next_vi_planerar_for_langre_an_en_vecka: "meal_planning_last",
+    next_vi_forsoker_planera_men_lyckas_sallan: "shopping_process"
   },
   meal_planning_last: {
     message: "Berätta om er senaste måltidsplanering.",
