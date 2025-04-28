@@ -18,9 +18,9 @@ export const dietaryQuestions: SurveyData = {
     message: "Hur har det gått hittills?",
     type: "single_choice",
     options: [
-      "Jag har gjort en förändring och håller i den",
-      "Jag försökte men det höll inte",
-      "Jag har inte gjort någon förändring än"
+      "Har gjort en förändring och håller i den",
+      "Försökte förändra men det höll inte",
+      "Har inte gjort någon förändring än"
     ],
     next_jag_forsokte_men_det_holl_inte: "diet_change_challenges",
     next_jag_har_inte_gjort_nagon_forandring_an: "diet_change_challenges",

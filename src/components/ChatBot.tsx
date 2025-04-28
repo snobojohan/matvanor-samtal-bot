@@ -44,10 +44,10 @@ const ChatBot = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center">
-      <div className="w-full max-w-[672px] min-h-[600px] max-h-[1000px] h-screen flex flex-col">
+      <div className="w-full max-w-[672px] min-h-[500px] max-h-[1000px] h-screen flex flex-col">
         <ChatHeader />
         <div className="flex-1 p-4">
-          <div className="space-y-4 pb-20">
+          <div className="space-y-4 pb-5">
             {isLoading ? (
               <div className="flex items-center justify-center h-32">
                 <div className="text-center">
