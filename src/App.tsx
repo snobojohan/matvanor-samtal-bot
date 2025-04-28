@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -7,6 +8,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Flow from "./pages/Flow";
 import EditSurvey from "./pages/EditSurvey";
+import Rslts from "./pages/Rslts";
 
 const queryClient = new QueryClient();
 
@@ -20,6 +22,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/flow" element={<Flow />} />
           <Route path="/edit" element={<EditSurvey />} />
+          <Route path="/rslts" element={<Rslts />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
