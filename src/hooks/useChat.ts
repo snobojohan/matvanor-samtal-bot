@@ -2,7 +2,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useSurvey } from '@/context/SurveyContext';
 import { supabase } from '@/integrations/supabase/client';
-import { UserResponse, SurveyData } from '@/types/survey';
+import { UserResponse, SurveyData, SkipCondition } from '@/types/survey';
 import { LOCAL_QUESTIONS } from '@/constants/config';
 import { surveyQuestions } from '@/data/surveyQuestions';
 
@@ -21,7 +21,7 @@ export const useChat = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isAnswerAnimating, setIsAnswerAnimating] = useState(false);
-  const { addResponse } = useSurvey();
+  const { addResponse, responses } = useSurvey();
 
   useEffect(() => {
     if (LOCAL_QUESTIONS) {
@@ -87,6 +87,40 @@ export const useChat = () => {
       .trim();
   };
 
+  // Check if any skipToIf conditions apply for the given question
+  const checkSkipConditions = (questionKey: string): string | null => {
+    const question = questions[questionKey];
+    if (!question || !question.skipToIf || !Array.isArray(question.skipToIf)) {
+      return null;
+    }
+
+    // Loop through each skip condition
+    for (const condition of question.skipToIf as SkipCondition[]) {
+      // Find the response for the referenced question
+      const targetResponse = responses.find(r => r.questionId === condition.question);
+      
+      if (targetResponse) {
+        const formattedAnswer = formatOptionKey(targetResponse.answer);
+        const formattedCondition = formatOptionKey(condition.equals);
+        
+        console.log('Checking skip condition:', {
+          question: condition.question,
+          responseAnswer: targetResponse.answer,
+          formattedAnswer,
+          equals: condition.equals,
+          formattedCondition,
+          to: condition.to
+        });
+        
+        if (formattedAnswer === formattedCondition) {
+          return condition.to;
+        }
+      }
+    }
+    
+    return null;
+  };
+
   const handleAnswer = useCallback((answer: string) => {
     if (isProcessing || isAnswerAnimating) return;
     setIsProcessing(true);
@@ -134,6 +168,34 @@ export const useChat = () => {
 
       if (nextQuestionKey) {
         console.log(`Found next question: ${nextQuestionKey}`);
+        
+        // Apply the skipToIf logic here
+        const processNextQuestion = (questionKey: string) => {
+          // Check if we need to skip this question
+          const skipTo = checkSkipConditions(questionKey);
+          
+          if (skipTo) {
+            console.log(`Skipping to ${skipTo} due to skipToIf condition`);
+            return skipTo;
+          }
+          
+          return questionKey;
+        };
+        
+        // Process the initial next question and any subsequent skips
+        let finalNextQuestion = nextQuestionKey;
+        let skipApplied = true;
+        let maxSkips = 10; // Safety to prevent infinite loops
+        
+        while (skipApplied && maxSkips > 0) {
+          const newNextQuestion = processNextQuestion(finalNextQuestion);
+          skipApplied = newNextQuestion !== finalNextQuestion;
+          finalNextQuestion = newNextQuestion;
+          maxSkips--;
+        }
+        
+        nextQuestionKey = finalNextQuestion;
+        
         setTimeout(() => {
           setCurrentQuestion(nextQuestionKey as string);
           setIsAnswerAnimating(false);
@@ -150,7 +212,7 @@ export const useChat = () => {
       setIsProcessing(false);
     }
     setUserInput('');
-  }, [currentQuestion, questions, addResponse, isProcessing, isAnswerAnimating]);
+  }, [currentQuestion, questions, addResponse, isProcessing, isAnswerAnimating, responses]);
 
   const handleMultipleChoice = useCallback((selectedOptions: string[]) => {
     if (isProcessing || isAnswerAnimating) return;
