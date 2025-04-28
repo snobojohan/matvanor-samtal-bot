@@ -27,7 +27,7 @@ export const foodPlanningQuestions: SurveyData = {
     next: "inspiration_sources"
   },
   shopping_process: {
-    message: "Berätta om hur det brukar gå till när ni handlar.",
+    message: "Hur brukar det gå till när ni handlar.",
     type: "text",
     next: "inspiration_sources"
   },
