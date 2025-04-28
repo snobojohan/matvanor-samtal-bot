@@ -36,29 +36,74 @@ export const surveyQuestions: SurveyData = {
     message: "Vilken är din högsta avslutade utbildning?",
     type: "single_choice",
     options: ["Grundskola", "Gymnasium", "Högskola/Universitet", "Annan utbildning"],
-    next: "difficult_food_day"
+    next: "unsure_food_decision"
   },
 
-  difficult_food_day: {
-    message: "Berätta om en dag det var svårt att komma på vad ni skulle äta.",
+  // ——— Här börjar den nya MD-sektionen ———
+
+  unsure_food_decision: {
+    message: "När du senast undrade ‘vad ska vi äta idag?’ – vad gjorde du/ni då?",
     type: "text",
-    next: "meal_planning_frequency"
+    next: "decision_process"
   },
-  meal_planning_frequency: {
-    message: "Hur brukar ni planera era måltider?",
+  decision_process: {
+    message: "Hur brukar ni göra när ni bestämmer vad ni ska äta?",
     type: "single_choice",
-    options: ["Planerar inte", "Dag för dag", "Veckovis", "Månadsvis", "Annat"],
-    next_planerarinte: "shopping_process",
-    next_annat: "meal_planning_last_week",
-    next: "ease_wishes"
+    options: [
+      "Vi hittar på samma dag",
+      "Vi planerar några dagar i taget",
+      "Vi planerar en vecka i taget",
+      "Vi planerar längre än en vecka i taget",
+      "Vi planerar inte alls"
+    ],
+    next_vi_planerar_nagra_dagar_i_taget: "meal_planning_last",
+    next_vi_planerar_en_vecka_i_taget: "meal_planning_last",
+    next_vi_planerar_langre_an_en_vecka_i_taget: "meal_planning_last",
+    next_vi_hittar_pa_samma_dag: "shopping_process",
+    next_vi_planerar_inte_allt: "shopping_process"
   },
-  meal_planning_last_week: {
-    message: "Berätta om er måltidsplanering förra veckan.",
+  meal_planning_last: {
+    message: "Berätta om er senaste måltidsplanering.",
     type: "text",
-    next: "ease_wishes"
+    next: "inspiration_sources"
   },
   shopping_process: {
     message: "Berätta om hur det brukar gå till när ni handlar.",
+    type: "text",
+    next: "inspiration_sources"
+  },
+  inspiration_sources: {
+    message: "Hur brukar ni få idéer och inspiration till middagar? Klicka gärna i fler än ett alternativ.",
+    type: "multiple_choice",
+    options: [
+      "Jag söker aktivt recept eller tips (bok, blogg, sociala medier osv)",
+      "Jag brukar laga sånt jag redan kan och tänker ut själv",
+      "Jag frågar andra (familj, vänner)",
+      "Jag bestämmer spontant i butiken",
+      "Annat"
+    ],
+    next: "responsibility_distribution"
+  },
+  responsibility_distribution: {
+    message: "Hur delar ni upp ansvaret för maten hemma?",
+    type: "single_choice",
+    options: [
+      "En person tar huvudansvaret",
+      "Vi delar ungefär lika",
+      "Vi turas om",
+      "Annat"
+    ],
+    next: "insecure_cooking"
+  },
+  insecure_cooking: {
+    message: "Upplever du att någon hemma känner sig osäker på att laga mat?",
+    type: "single_choice",
+    options: ["Ja", "Nej", "Vet inte"],
+    next_ja: "insecure_cooking_explanation",
+    next: "ease_wishes"
+  },
+  insecure_cooking_explanation: {
+    message: "Vill du berätta lite mer om vad som gör det svårt eller osäkert?",
     type: "text",
     next: "ease_wishes"
   },
@@ -76,47 +121,64 @@ export const surveyQuestions: SurveyData = {
     message: "När det finns matrester hemma, vad är mest troligt att ni gör med dem?",
     type: "single_choice",
     options: ["Slänger", "Äter samma rätt igen", "Använder i nya rätter", "Varierar", "Annat"],
-    next_anvanderinyaratter: "leftovers_reuse_frequency",
+    next_anvander_i_nya_ratter: "leftovers_reuse_frequency",
     next_varierar: "leftovers_reuse_frequency",
-    next: "leftovers_handling_explanation"
+    next: "recent_leftover_use"
   },
   leftovers_reuse_frequency: {
     message: "Hur ofta använder ni överbliven tillagad mat som ingrediens i nya maträtter?",
     type: "single_choice",
-    options: ["Sällan (1-2 ggr/månad)", "Ibland (1-2 ggr/vecka)", "Ofta (3-5 ggr/vecka)", "Nästan dagligen"],
-    next: "leftovers_handling_explanation"
+    options: [
+      "Sällan (1-2 ggr/månad)",
+      "Ibland (1-2 ggr/vecka)",
+      "Ofta (3-5 ggr/vecka)",
+      "Nästan dagligen"
+    ],
+    next: "recent_leftover_use"
   },
-  leftovers_handling_explanation: {
-    message: "Berätta lite om hur ni hanterar matrester i ert hushåll från en dag till en annan.",
+  recent_leftover_use: {
+    message: "Berätta om senaste gången ni använde matrester hemma. Vad gjorde ni?",
     type: "text",
     next: "tools_used"
   },
   tools_used: {
-    message: "Vilka tjänster, appar eller verktyg (digitala eller fysiska) använder ni för att underlätta i vardagen?",
+    message: "Finns det något ni använder för att planera eller organisera vardagen kring mat (t.ex. handla, skriva listor, komma ihåg middagsidéer)? Berätta gärna hur ni gör.",
     type: "text",
     next: "meal_kit_service"
   },
   meal_kit_service: {
-    message: "Har ni testat matkassar eller någon annan betald tjänst för att underlätta matplanering eller matlagning?",
+    message: "Har du någon gång använt en tjänst du betalat för, som t.ex. matkasse, receptabonnemang eller hemleverans, för att göra matplanering eller matlagning enklare?",
     type: "single_choice",
-    options: ["Ja", "Nej"],
-    next_ja: "meal_kit_experience",
-    next_nej: "diet_change_considered"
+    options: [
+      "Ja, använder regelbundet",
+      "Ja, har testat någon gång",
+      "Nej, aldrig testat"
+    ],
+    next_ja_anvander_regelbundet: "meal_kit_regular_use",
+    next_ja_har_testat_nagon_gang: "meal_kit_tried_once",
+    next: "diet_change_considered"
   },
-  meal_kit_experience: {
-    message: "Vad var det? Funkade det bra?",
+  meal_kit_regular_use: {
+    message: "Vilken tjänst använder ni mest och hur underlättar den erat liv?",
     type: "text",
-    next: "meal_kit_still_using"
+    next: "diet_change_considered"
   },
-  meal_kit_still_using: {
-    message: "Använder ni det fortfarande?",
-    type: "single_choice",
-    options: ["Ja", "Nej"],
-    next_nej: "meal_kit_churn",
-    next_ja: "diet_change_considered"
+  meal_kit_tried_once: {
+    message: "Varför slutade ni använda tjänsten?",
+    type: "multiple_choice",
+    options: [
+      "Blev för dyrt",
+      "Blev för mycket/komplicerat",
+      "Passade inte vår smak",
+      "För lite variation i maten",
+      "Vi föredrog att välja själva",
+      "Livssituationen ändrades (t.ex. flytt, barn, nytt jobb)",
+      "Annat"
+    ],
+    next: "meal_kit_churn_explanation"
   },
-  meal_kit_churn: {
-    message: "Varför slutade ni använda det?",
+  meal_kit_churn_explanation: {
+    message: "Berätta lite mer om vilken tjänst och varför det inte funkade för er?",
     type: "text",
     next: "diet_change_considered"
   },
@@ -128,7 +190,7 @@ export const surveyQuestions: SurveyData = {
     next: "important_aspects"
   },
   diet_change_goals: {
-    message: "Vad handlar det om, vad har ni för mål?",
+    message: "Vad handlade det om, vad har ni för mål?",
     type: "text",
     next: "diet_change_progress"
   },
@@ -140,8 +202,8 @@ export const surveyQuestions: SurveyData = {
       "Jag försökte men det höll inte",
       "Jag har inte gjort någon förändring än"
     ],
-    next_jagforsoktemendethallinte: "diet_change_challenges",
-    next_jagharintegjortan: "diet_change_challenges",
+    next_jag_forsokte_men_det_holl_inte: "diet_change_challenges",
+    next_jag_har_inte_gjort_nagon_forandring_an: "diet_change_challenges",
     next: "important_aspects"
   },
   diet_change_challenges: {
@@ -150,30 +212,9 @@ export const surveyQuestions: SurveyData = {
     next: "important_aspects"
   },
   important_aspects: {
-    message: "Är något av det här viktigt för dig just nu? Välj gärna flera alternativ.",
+    message: "Är något av det här viktigt för dig just nu? Välj gärna flera",
     type: "multiple_choice",
-    options: [
-      "Äta nyttigare",
-      "Äta billigare",
-      "Minska klimatpåverkan",
-      "Minska stress",
-      "Inget",
-      "Annat"
-    ],
-    next: "inspiration_sources"
-  },
-  inspiration_sources: {
-    message: "Hur får ni matinspiration? Klicka gärna i fler än ett alternativ.",
-    type: "multiple_choice",
-    options: [
-      "Receptböcker",
-      "Matbloggar",
-      "Sociala medier",
-      "Receptsajter online",
-      "TV-program",
-      "Vänner och familj",
-      "Annat"
-    ],
+    options: ["Äta nyttigare", "Äta billigare", "Minska klimatpåverkan", "Minska stress", "Annat"],
     next: "missed_questions"
   },
   missed_questions: {
