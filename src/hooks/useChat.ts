@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useCallback } from 'react';
 import { useSurvey } from '@/context/SurveyContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -75,15 +76,33 @@ export const useChat = () => {
   };
 
   const formatOptionKey = (text: string): string => {
-    const trimmed = text.trim().toLowerCase();
+    if (!text) return '';
     
-    if (trimmed === 'använder i nya rätter') {
-      return 'anvanderinyaratter';
+    console.log(`Formatting option key: "${text}"`);
+    
+    // Handle specific cases that caused issues
+    if (text.trim().toLowerCase() === 'vi planerar inte alls') {
+      return 'vi_planerar_inte_alls';
     }
     
-    return trimmed
-      .replace(/[^a-z0-9]/g, '')
-      .trim();
+    if (text.trim().toLowerCase() === 'använder i nya rätter') {
+      return 'anvander_i_nya_ratter';
+    }
+    
+    // Replace Swedish characters with their latin equivalents
+    const withoutSwedishChars = text.toLowerCase()
+      .replace(/å/g, 'a')
+      .replace(/ä/g, 'a')
+      .replace(/ö/g, 'o');
+    
+    // Replace spaces and non-alphanumeric characters with underscores
+    const formatted = withoutSwedishChars
+      .replace(/[^a-z0-9]+/g, '_')
+      .replace(/^_+|_+$/g, '') // Trim leading/trailing underscores
+      .replace(/_+/g, '_'); // Replace multiple consecutive underscores with a single one
+    
+    console.log(`Formatted key: "${formatted}"`);
+    return formatted;
   };
 
   const checkSkipConditions = (questionKey: string): string | null => {
@@ -91,6 +110,8 @@ export const useChat = () => {
     if (!question || !question.skipToIf || !Array.isArray(question.skipToIf)) {
       return null;
     }
+
+    console.log(`Checking skip conditions for question: ${questionKey}`);
 
     for (const condition of question.skipToIf as SkipCondition[]) {
       const targetResponse = responses.find(r => r.questionId === condition.question);
@@ -105,15 +126,18 @@ export const useChat = () => {
           formattedAnswer,
           equals: condition.equals,
           formattedCondition,
-          to: condition.to
+          to: condition.to,
+          isMatch: formattedAnswer === formattedCondition
         });
         
         if (formattedAnswer === formattedCondition) {
+          console.log(`Skip condition matched! Skipping to: ${condition.to}`);
           return condition.to;
         }
       }
     }
     
+    console.log('No matching skip conditions found.');
     return null;
   };
 
@@ -157,9 +181,11 @@ export const useChat = () => {
       
       if (question[nextKey]) {
         nextQuestionKey = question[nextKey] as string;
+        console.log(`Found specific next question path: ${nextKey} -> ${nextQuestionKey}`);
       } 
       else if (question.next) {
         nextQuestionKey = question.next;
+        console.log(`Using default next path: ${nextQuestionKey}`);
       }
 
       if (nextQuestionKey) {
