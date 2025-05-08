@@ -1,15 +1,14 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { SurveyData, UserResponse } from '@/types/survey';
 import { LOCAL_QUESTIONS } from '@/constants/config';
-import { surveyQuestions } from '@/data/survey';
+import { getSurveyQuestions } from '@/utils/surveyVersionSelector';
 
 /**
  * Loads the active survey configuration from Supabase
  */
 export const loadSurveyQuestions = async (): Promise<SurveyData> => {
   if (LOCAL_QUESTIONS) {
-    return surveyQuestions;
+    return getSurveyQuestions();
   }
 
   try {
@@ -25,11 +24,11 @@ export const loadSurveyQuestions = async (): Promise<SurveyData> => {
       return data.questions as SurveyData;
     } else {
       console.error('No active survey configuration found');
-      return {};
+      return getSurveyQuestions(); // Fallback to local questions
     }
   } catch (error) {
     console.error('Error loading survey configuration:', error);
-    return {};
+    return getSurveyQuestions(); // Fallback to local questions
   }
 };
 

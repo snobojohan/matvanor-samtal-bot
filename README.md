@@ -71,3 +71,18 @@ Yes, you can!
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+
+## Survey Versions
+
+The application supports multiple versions of the survey questionnaire. To switch between versions:
+
+- Default version (v1): No URL parameter needed
+- Version 2: Add `?version=2` to the URL
+
+Example:
+```
+http://localhost:8080/  # Uses version 1
+http://localhost:8080/?version=2  # Uses version 2
+```
+
+This feature allows testing new survey flows without affecting the main version.

@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -9,6 +8,7 @@ import NotFound from "./pages/NotFound";
 import Flow from "./pages/Flow";
 import EditSurvey from "./pages/EditSurvey";
 import Rslts from "./pages/Rslts";
+import Mermaid from "./pages/Mermaid";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +23,7 @@ const App = () => (
           <Route path="/flow" element={<Flow />} />
           <Route path="/edit" element={<EditSurvey />} />
           <Route path="/rslts" element={<Rslts />} />
+          <Route path="/mermaid" element={<Mermaid />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

@@ -1,5 +1,4 @@
-
-import { SkipCondition, UserResponse } from '@/types/survey';
+import { SkipCondition, UserResponse, SurveyData, SurveyQuestion } from '@/types/survey';
 
 /**
  * Formats option strings into consistent key format for navigation 
@@ -50,7 +49,7 @@ export const formatOptionKey = (text: string): string => {
  */
 export const checkSkipConditions = (
   questionKey: string,
-  questions: any,
+  questions: SurveyData,
   responses: UserResponse[]
 ): string | null => {
   const question = questions[questionKey];
@@ -65,21 +64,45 @@ export const checkSkipConditions = (
     
     if (targetResponse) {
       const formattedAnswer = formatOptionKey(targetResponse.answer);
-      const formattedCondition = formatOptionKey(condition.equals);
       
-      console.log('Checking skip condition:', {
-        question: condition.question,
-        responseAnswer: targetResponse.answer,
-        formattedAnswer,
-        equals: condition.equals,
-        formattedCondition,
-        to: condition.to,
-        isMatch: formattedAnswer === formattedCondition
-      });
+      // Handle equals condition
+      if (condition.equals !== undefined) {
+        const formattedCondition = formatOptionKey(condition.equals);
+        
+        console.log('Checking equals condition:', {
+          question: condition.question,
+          responseAnswer: targetResponse.answer,
+          formattedAnswer,
+          equals: condition.equals,
+          formattedCondition,
+          to: condition.to,
+          isMatch: formattedAnswer === formattedCondition
+        });
+        
+        if (formattedAnswer === formattedCondition) {
+          console.log(`Skip condition matched! Skipping to: ${condition.to}`);
+          return condition.to;
+        }
+      }
       
-      if (formattedAnswer === formattedCondition) {
-        console.log(`Skip condition matched! Skipping to: ${condition.to}`);
-        return condition.to;
+      // Handle not_equals condition
+      if (condition.not_equals !== undefined) {
+        const formattedCondition = formatOptionKey(condition.not_equals);
+        
+        console.log('Checking not_equals condition:', {
+          question: condition.question,
+          responseAnswer: targetResponse.answer,
+          formattedAnswer,
+          not_equals: condition.not_equals,
+          formattedCondition,
+          to: condition.to,
+          isMatch: formattedAnswer !== formattedCondition
+        });
+        
+        if (formattedAnswer !== formattedCondition) {
+          console.log(`Not-equals condition matched! Skipping to: ${condition.to}`);
+          return condition.to;
+        }
       }
     }
   }
@@ -94,7 +117,7 @@ export const checkSkipConditions = (
 export const determineNextQuestion = (
   currentQuestion: string,
   answer: string,
-  questions: any,
+  questions: SurveyData,
   responses: UserResponse[]
 ): string | undefined => {
   const question = questions[currentQuestion];
@@ -149,4 +172,38 @@ export const determineNextQuestion = (
   
   console.error('No next question found');
   return undefined;
+};
+
+/**
+ * Substitutes pronouns in text based on household type
+ * - For single households: changes "ni/er" to "du/din" and "Vi" to "Jag"
+ * - Otherwise leaves text unchanged
+ */
+export const substitutePronouns = (
+  text: string, 
+  responses: UserResponse[]
+): string => {
+  // Check if user has responded as a single household
+  const introResponse = responses.find(r => r.questionId === 'intro');
+  const isSingleHousehold = introResponse && 
+    formatOptionKey(introResponse.answer) === 'singelhushall';
+  
+  if (!isSingleHousehold) {
+    return text; // No substitution needed
+  }
+  
+  // First handle the direct substitutions with word boundaries
+  let result = text
+    .replace(/\bni\b/gi, match => match === 'Ni' ? 'Du' : 'du')
+    .replace(/\ber\b/gi, match => match === 'Er' ? 'Din' : 'din')
+    .replace(/\bvår\b/gi, match => match === 'Vår' ? 'Min' : 'min')
+    .replace(/\bvårt\b/gi, match => match === 'Vårt' ? 'Mitt' : 'mitt')
+    .replace(/\bvåra\b/gi, match => match === 'Våra' ? 'Mina' : 'mina')
+    .replace(/\bvi\b/gi, match => match === 'Vi' ? 'Jag' : 'jag');
+  
+  // Then specifically check for vi/Vi at the beginning of a sentence
+  result = result.replace(/([.!?]\s+|\n|^)vi\b/g, '$1jag');
+  result = result.replace(/([.!?]\s+|\n|^)Vi\b/g, '$1Jag');
+  
+  return result;
 };

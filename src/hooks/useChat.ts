@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useSurvey } from '@/context/SurveyContext';
 import { UserResponse, SurveyData } from '@/types/survey';
-import { formatOptionKey, determineNextQuestion } from '@/utils/surveyUtils';
+import { formatOptionKey, determineNextQuestion, substitutePronouns } from '@/utils/surveyUtils';
 import { loadSurveyQuestions, saveResponse } from '@/services/surveyService';
 
 interface ChatMessage {
@@ -20,6 +20,8 @@ export const useChat = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isAnswerAnimating, setIsAnswerAnimating] = useState(false);
   const { addResponse, responses } = useSurvey();
+  // Track displayed questions to prevent duplicates
+  const displayedQuestions = useRef<Set<string>>(new Set());
 
   useEffect(() => {
     const initializeQuestions = async () => {
@@ -27,6 +29,8 @@ export const useChat = () => {
       const loadedQuestions = await loadSurveyQuestions();
       setQuestions(loadedQuestions);
       setIsLoading(false);
+      // Reset displayed questions when survey is initialized
+      displayedQuestions.current = new Set();
     };
 
     initializeQuestions();
@@ -39,8 +43,13 @@ export const useChat = () => {
 
     try {
       const currentTimestamp = new Date().toISOString();
-      setChatHistory(prev => [...prev, { type: 'user', content: answer }]);
       
+      // When displaying the user's answer in chat history, substitute pronouns if applicable
+      // This ensures we display "Jag..." instead of "Vi..." for single households
+      const displayAnswer = substitutePronouns(answer, responses);
+      setChatHistory(prev => [...prev, { type: 'user', content: displayAnswer }]);
+      
+      // Store original answer in the response data for navigation logic
       const response: UserResponse = {
         questionId: currentQuestion,
         answer,
@@ -60,18 +69,17 @@ export const useChat = () => {
       const nextQuestionKey = determineNextQuestion(currentQuestion, answer, questions, responses);
       
       if (nextQuestionKey) {
-
         // First show the user's answer and disable inputs
         setIsAnswerAnimating(true);
         setIsTyping(true);
         
-        // Wait 700ms before showing the next question and its alternatives
+        // Wait before showing the next question and its alternatives
         setTimeout(() => {
           setCurrentQuestion(nextQuestionKey);
           setIsAnswerAnimating(false);
           setIsProcessing(false);
           setIsTyping(false);
-        }, 1000);
+        }, 700);
       } else {
         console.error('No next question found');
         setIsAnswerAnimating(false);
@@ -94,11 +102,17 @@ export const useChat = () => {
 
   useEffect(() => {
     if (currentQuestion && !isLoading && questions[currentQuestion]) {
-      const question = questions[currentQuestion];
-      // Show the question and its alternatives immediately
-      setChatHistory(prev => [...prev, { type: 'bot', content: question.message }]);
+      // Only add the question to chat history if it hasn't been displayed before
+      if (!displayedQuestions.current.has(currentQuestion)) {
+        const question = questions[currentQuestion];
+        // Apply pronoun substitution to the message
+        const adaptedMessage = substitutePronouns(question.message, responses);
+        setChatHistory(prev => [...prev, { type: 'bot', content: adaptedMessage }]);
+        // Mark this question as displayed
+        displayedQuestions.current.add(currentQuestion);
+      }
     }
-  }, [currentQuestion, questions, isLoading]);
+  }, [currentQuestion, questions, isLoading, responses]);
 
   const handleSubmit = useCallback(() => {
     if (!userInput.trim() || isProcessing) return;
@@ -109,6 +123,14 @@ export const useChat = () => {
     if (isProcessing) return;
     handleAnswer(option);
   }, [handleAnswer, isProcessing]);
+
+  // Add a function to reset the survey
+  const resetSurvey = useCallback(() => {
+    setCurrentQuestion('welcome');
+    setChatHistory([]);
+    setUserInput('');
+    displayedQuestions.current = new Set();
+  }, []);
 
   return {
     currentQuestion,
@@ -124,5 +146,6 @@ export const useChat = () => {
     handleAnswer,
     questions,
     handleMultipleChoice,
+    resetSurvey,
   };
 };

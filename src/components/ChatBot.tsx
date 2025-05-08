@@ -1,5 +1,4 @@
-
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import TypingIndicator from './TypingIndicator';
 import ChatHeader from './chat/ChatHeader';
 import ChatMessage from './chat/ChatMessage';
@@ -23,14 +22,19 @@ const ChatBot = () => {
     questions
   } = useChat();
 
-  // Only scroll to bottom when content changes, not on initial load
-  const scrollToBottom = () => {
-    if (chatHistory.length > 0 || isTyping) {
-      chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+  const [hasInteracted, setHasInteracted] = useState(false);
 
+  // Only scroll to bottom when content changes, not on initial load
   useEffect(() => {
+
+    
+    // Move scrollToBottom function inside the effect
+    const scrollToBottom = () => {
+      if (chatHistory.length > 0 || isTyping) {
+        chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }
+    };
+
     if (chatHistory.length > 0 || isTyping) {
       scrollToBottom();
     }
@@ -42,11 +46,18 @@ const ChatBot = () => {
 
   const isButtonsDisabled = isLoading || isProcessing || isAnswerAnimating;
 
+  const isFirstQuestion = currentQuestion === 'welcome' && !hasInteracted;
+
+  const handleUserInteraction = (callback, ...args) => {
+    setHasInteracted(true);
+    callback(...args);
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center">
-      <div className="w-full max-w-[672px] min-h-[500px] max-h-[1000px] h-screen flex flex-col">
+      <div className="w-full max-w-[672px] min-h-[600px] max-h-[1000px] h-screen flex flex-col justify-center">
         <ChatHeader />
-        <div className="flex-1 p-4">
+        <div className={`${isFirstQuestion ? 'flex-initial' : 'flex-1'} p-4 transition-all duration-500 ease-out `}>
           <div className="space-y-4 pb-5">
             {isLoading ? (
               <div className="flex items-center justify-center h-32">
@@ -75,13 +86,14 @@ const ChatBot = () => {
           <ChatInput
             value={userInput}
             onChange={setUserInput}
-            onSubmit={handleSubmit}
-            onOptionClick={handleOptionClick}
+            onSubmit={() => handleUserInteraction(handleSubmit)}
+            onOptionClick={(option) => handleUserInteraction(handleOptionClick, option)}
             options={currentOptions}
             isEnd={isEndQuestion}
             disabled={isButtonsDisabled}
             type={currentQuestion ? questions?.[currentQuestion]?.type : undefined}
             onMultipleChoice={handleMultipleChoice}
+            currentQuestion={currentQuestion}
           />
         </div>
       </div>

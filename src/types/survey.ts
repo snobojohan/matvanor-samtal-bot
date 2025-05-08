@@ -1,9 +1,9 @@
-
 export type QuestionType = "text" | "single_choice" | "multiple_choice";
 
 export type SkipCondition = {
   question: string;
-  equals: string;
+  equals?: string;
+  not_equals?: string;
   to: string;
 };
 
@@ -14,7 +14,7 @@ export type SurveyQuestion = {
   next?: string;
   end?: boolean;
   skipToIf?: SkipCondition[];
-  [key: string]: any;
+  [key: string]: string | string[] | boolean | QuestionType | SkipCondition[] | undefined;
 };
 
 export type SurveyData = {

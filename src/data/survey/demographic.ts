@@ -24,11 +24,5 @@ export const demographicQuestions: SurveyData = {
     type: "single_choice",
     options: ["Landsbygd", "Mindre stad", "Storstad"],
     next: "education_level"
-  },
-  education_level: {
-    message: "Vilken är din högsta avslutade utbildning?",
-    type: "single_choice",
-    options: ["Grundskola", "Gymnasium", "Högskola/Universitet", "Annan utbildning"],
-    next: "unsure_food_decision"
   }
 };
