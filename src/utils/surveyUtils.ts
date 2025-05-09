@@ -126,6 +126,43 @@ export const determineNextQuestion = (
     return undefined;
   }
 
+  // Check if this is a multiple choice answer (contains commas)
+  const isMultipleChoice = answer.includes(',');
+  
+  // For multiple choice, we need to check each selected option
+  if (isMultipleChoice && question.type === 'multiple_choice') {
+    console.log('Processing multiple choice answer:', answer);
+    
+    // Split the answer into individual options
+    const selectedOptions = answer.split(',').map(opt => opt.trim());
+    
+    // Check if any of the special routing options are selected
+    for (const option of selectedOptions) {
+      const formattedOption = formatOptionKey(option);
+      const nextKey = `next_${formattedOption}`;
+      
+      // If this option has a specific next path, use it
+      if (question[nextKey]) {
+        const nextQuestionKey = question[nextKey] as string;
+        console.log(`Found specific next path for multiple choice option "${option}": ${nextKey} -> ${nextQuestionKey}`);
+        
+        // Process skip conditions
+        const finalNextQuestion = processNextQuestionWithSkips(nextQuestionKey, questions, responses);
+        return finalNextQuestion;
+      }
+    }
+    
+    // If no special routing option was found, proceed with default next
+    if (question.next) {
+      console.log(`Using default next path for multiple choice: ${question.next}`);
+      return processNextQuestionWithSkips(question.next, questions, responses);
+    }
+    
+    console.error('No next question found for multiple choice answer');
+    return undefined;
+  }
+  
+  // For single choice or text answers, use the existing logic
   const formattedAnswer = formatOptionKey(answer);
   const nextKey = `next_${formattedAnswer}`;
   
@@ -150,28 +187,36 @@ export const determineNextQuestion = (
 
   if (nextQuestionKey) {
     console.log(`Found next question: ${nextQuestionKey}`);
-    
-    const processNextQuestion = (questionKey: string): string => {
-      const skipTo = checkSkipConditions(questionKey, questions, responses);
-      return skipTo || questionKey;
-    };
-    
-    let finalNextQuestion = nextQuestionKey;
-    let skipApplied = true;
-    let maxSkips = 10;
-    
-    while (skipApplied && maxSkips > 0) {
-      const newNextQuestion = processNextQuestion(finalNextQuestion);
-      skipApplied = newNextQuestion !== finalNextQuestion;
-      finalNextQuestion = newNextQuestion;
-      maxSkips--;
-    }
-    
-    return finalNextQuestion;
+    return processNextQuestionWithSkips(nextQuestionKey, questions, responses);
   }
   
   console.error('No next question found');
   return undefined;
+};
+
+// Helper function to process skip conditions
+const processNextQuestionWithSkips = (
+  nextQuestionKey: string,
+  questions: SurveyData,
+  responses: UserResponse[]
+): string => {
+  const processNextQuestion = (questionKey: string): string => {
+    const skipTo = checkSkipConditions(questionKey, questions, responses);
+    return skipTo || questionKey;
+  };
+  
+  let finalNextQuestion = nextQuestionKey;
+  let skipApplied = true;
+  let maxSkips = 10;
+  
+  while (skipApplied && maxSkips > 0) {
+    const newNextQuestion = processNextQuestion(finalNextQuestion);
+    skipApplied = newNextQuestion !== finalNextQuestion;
+    finalNextQuestion = newNextQuestion;
+    maxSkips--;
+  }
+  
+  return finalNextQuestion;
 };
 
 /**
