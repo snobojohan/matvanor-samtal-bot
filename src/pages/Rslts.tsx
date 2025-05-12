@@ -4,7 +4,8 @@ import { Card } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { FileJson, FileSpreadsheet } from 'lucide-react';
-import { surveyQuestions } from '@/data/survey';
+import { surveyQuestions as surveyQuestionsV1 } from '@/data/allSurveyQuestions';
+import { surveyQuestions as surveyQuestionsV2 } from '@/data/allSurveyQuestionsV2';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 
@@ -17,9 +18,13 @@ const Rslts = () => {
   const [responses, setResponses] = useState<SurveyResponse[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [allUniqueQuestionIds, setAllUniqueQuestionIds] = useState<string[]>([]);
   
-  // Get all question IDs from the survey data
-  const allQuestionIds = Object.keys(surveyQuestions).filter(key => key !== 'early_exit' && key !== 'thank_you');
+  // Combine both versions of survey questions for reference
+  const combinedSurveyQuestions = {
+    ...surveyQuestionsV1,
+    ...surveyQuestionsV2
+  };
   
   useEffect(() => {
     const fetchResponses = async () => {
@@ -35,6 +40,16 @@ const Rslts = () => {
         if (error) throw error;
         
         if (data) {
+          // Extract all unique question IDs from responses
+          const uniqueQuestionIds = new Set<string>();
+          data.forEach(item => {
+            uniqueQuestionIds.add(item.questionid);
+          });
+          
+          setAllUniqueQuestionIds(Array.from(uniqueQuestionIds)
+            .filter(qid => qid !== 'early_exit' && qid !== 'thank_you')
+            .sort());
+          
           // Group responses by session_id
           const groupedResponses = data.reduce((acc: { [key: string]: SurveyResponse }, item) => {
             if (!acc[item.session_id]) {
@@ -100,8 +115,8 @@ const Rslts = () => {
   
   const downloadCSV = () => {
     try {
-      // Create the CSV headers (session_id + all question IDs)
-      const headers = ['session_id', ...allQuestionIds];
+      // Create the CSV headers using all unique question IDs from the database
+      const headers = ['session_id', ...allUniqueQuestionIds];
       
       // Map the responses to CSV rows
       const rows = responses.map(response => {
@@ -184,38 +199,38 @@ const Rslts = () => {
       )}
       
       {!loading && !error && responses.length > 0 && (
-        
-            <div>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="sticky left-0 bg-background z-10 whitespace-nowrap">Session ID</TableHead>
-                    {allQuestionIds.map((questionId) => (
-                      <TableHead key={questionId} className="whitespace-nowrap">
-                        {questionId} {surveyQuestions[questionId]?.message ? 
-                          <span className="text-gray-500 text-xs block">
-                            ({surveyQuestions[questionId].message.substring(0, 30)}...)
-                          </span> : null}
-                      </TableHead>
-                    ))}
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {responses.map((response) => (
-                    <TableRow key={response.session_id}>
-                      <TableCell className="sticky left-0 bg-background z-10 whitespace-nowrap font-medium">
-                        {response.session_id.substring(0, 8)}...
-                      </TableCell>
-                      {allQuestionIds.map((questionId) => (
-                        <TableCell key={`${response.session_id}-${questionId}`} className="whitespace-nowrap">
-                          {response[questionId] || '-'}
-                        </TableCell>
-                      ))}
-                    </TableRow>
+        <div>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="sticky left-0 bg-background z-10 whitespace-nowrap">Session ID</TableHead>
+                {allUniqueQuestionIds.map((questionId) => (
+                  <TableHead key={questionId} className="whitespace-nowrap">
+                    {questionId} {combinedSurveyQuestions[questionId]?.message ? 
+                      <span className="text-gray-500 text-xs block">
+                        ({combinedSurveyQuestions[questionId].message.substring(0, 30)}...)
+                      </span> : 
+                      <span className="text-amber-500 text-xs block">(Question removed or renamed)</span>}
+                  </TableHead>
+                ))}
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {responses.map((response) => (
+                <TableRow key={response.session_id}>
+                  <TableCell className="sticky left-0 bg-background z-10 whitespace-nowrap font-medium">
+                    {response.session_id.substring(0, 8)}...
+                  </TableCell>
+                  {allUniqueQuestionIds.map((questionId) => (
+                    <TableCell key={`${response.session_id}-${questionId}`} className="whitespace-nowrap">
+                      {response[questionId] || '-'}
+                    </TableCell>
                   ))}
-                </TableBody>
-              </Table>
-            </div>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       )}
     </div>
   );
