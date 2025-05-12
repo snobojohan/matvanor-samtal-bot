@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect, useState } from 'react';
 import TypingIndicator from './TypingIndicator';
 import ChatHeader from './chat/ChatHeader';
@@ -24,9 +25,9 @@ const ChatBot = () => {
 
   const [hasInteracted, setHasInteracted] = useState(false);
 
-  // Only scroll to bottom when content changes, not on initial load
+  // Add logging to check component rendering
   useEffect(() => {
-
+    console.log('ChatBot component rendered', { currentQuestion, isLoading });
     
     // Move scrollToBottom function inside the effect
     const scrollToBottom = () => {
@@ -38,7 +39,7 @@ const ChatBot = () => {
     if (chatHistory.length > 0 || isTyping) {
       scrollToBottom();
     }
-  }, [chatHistory, isTyping]);
+  }, [chatHistory, isTyping, currentQuestion, isLoading]);
 
   const isEndQuestion = !isLoading && currentQuestion && questions?.[currentQuestion]?.end === true;
   
